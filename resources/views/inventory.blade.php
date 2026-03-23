@@ -32,19 +32,21 @@
                         </div>
 
                         {{-- add new --}}
-                        <div
-                            class="md:w-auto flex flex-col space-y-2 md:space-y-0 items-stretch justify-end md:space-x-3 flex-shrink-0">
-                            <button type="button" id="createProductModalButton" data-modal-target="createProductModal"
-                                data-modal-toggle="createProductModal"
-                                class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
-                                <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clip-rule="evenodd" fill-rule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
-                                </svg>
-                                Add Item
-                            </button>
-                        </div>
+                        @canany(['owner', 'admin'])
+                            <div
+                                class="md:w-auto flex flex-col space-y-2 md:space-y-0 items-stretch justify-end md:space-x-3 flex-shrink-0">
+                                <button type="button" id="createProductModalButton" data-modal-target="createProductModal"
+                                    data-modal-toggle="createProductModal"
+                                    class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                                    <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path clip-rule="evenodd" fill-rule="evenodd"
+                                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                    </svg>
+                                    Add Item
+                                </button>
+                            </div>
+                        @endcanany
                     </div>
                     {{-- table --}}
                     <div class="flex-1 overflow-auto rounded-lg">
@@ -56,22 +58,19 @@
                                     <th scope="col" class="px-4 py-3 w-90">Item Name</th>
                                     {{-- Does not show Item Cost to others --}}
                                     @canany(['owner', 'admin'])
-                                        <th scope="col" class="px-4 py-3 w-28 text-center">Item Cost</th>
+                                        <th scope="col" class="px-4 py-3 w-28">Item Cost</th>
                                     @endcanany
 
-                                    <th scope="col" class="px-4 py-3 w-40 text-center">Selling Price</th>
+                                    <th scope="col" class="px-4 py-3 w-40">Selling Price</th>
                                     {{-- allow owner and admin to choose what branch to show inventory stocks --}}
                                     @canany(['owner', 'admin'])
                                         <th scope="col" class="px-4 py-3 w-40">
-                                            <select
-                                                class="border-0 bg-transparent p-0 pr-6 text-xs font-bold uppercase text-gray-700 hover:text-gray-900 focus:ring-0 dark:text-gray-400 dark:hover:text-gray-300 cursor-pointer w-full">
-                                                <option value="{{ $current_branch->branch_id }}"
-                                                    class="dark:bg-gray-800 text-gray-900 dark:text-gray-100" selected>
-                                                    {{ $current_branch->name }}
-                                                </option>
+                                            <select onchange="window.location.href='?branch_id=' + this.value"
+                                                class="form-select border-0 bg-transparent p-0 pr-6 text-xs font-bold uppercase text-gray-700 hover:text-gray-900 focus:ring-0 dark:text-gray-400 dark:hover:text-gray-300 cursor-pointer w-full">
                                                 @foreach ($branches as $branch)
-                                                    <option value="{{ $branch->branch_id }}"
-                                                        class="dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+                                                    <option value="{{ $branch->id }}"
+                                                        class="dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                                                        {{ $branch->id == $selectedBranch ? 'selected' : '' }}>
                                                         {{ $branch->name }}
                                                     </option>
                                                 @endforeach
@@ -84,36 +83,42 @@
                                     <th scope="col" class="px-4 py-3">
                                         <span class="sr-only">Actions</span>
                                     </th>
-
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($items as $item)
+                                @forelse ($items as $item)
                                     <tr
-                                        class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                                        <td class="px-4 py-3   ">
+                                        class="searchable-row border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                                        <td class="sku-col px-4 py-3">
                                             {{ $item->sku }}
                                         </td>
                                         <td
-                                            class="px-4  py-3 font-medium text-gray-900  dark:text-white whitespace-nowrap">
+                                            class="name-col px-4  py-3 font-medium text-gray-900  dark:text-white whitespace-nowrap">
                                             {{ $item->item_name }}
                                         </td>
+                                        {{-- show item cost if owner or admin --}}
                                         @canany(['owner', 'admin'])
-                                            <td class="px-4 py-3 text-center">
+                                            <td class="px-4 py-3">
                                                 ₱{{ number_format($item->cost, 2) }}
                                             </td>
                                         @endcanany
-                                        <td class="px-4 py-3 text-center">
+                                        <td class="px-4 py-3">
                                             ₱{{ number_format($item->selling_price, 2) }}
                                         </td>
-                                        <td class="px-4 py-3">
-                                            <div class="flex justify-center">
+
+                                        @if ($item->inventories->first())
+                                            <td
+                                                class="px-4 py-3 font-semibold {{ $item->inventories->first()->stock > 10 ? ' text-green-800 dark:text-green-300' : ($item->inventories->first()->stock > 0 ? ' text-yellow-800 dark:text-yellow-300' : ' text-red-800 dark:text-red-300') }}">
+                                                {{ $item->inventories->first()->stock }}
+                                            </td>
+                                        @else
+                                            <td class="px-4 py-3">
                                                 <span
-                                                    class="px-2 py-1 font-semibold rounded-md {{ $stock > 10 ? ' text-green-800 dark:text-green-300' : ($stock > 0 ? ' text-yellow-800 dark:text-yellow-300' : ' text-red-800 dark:text-red-300') }}">
-                                                    {{ $stock }}
+                                                    class="px-2 py-1 text-center font-semibold rounded-md text-red-800 dark:text-red-300">
+                                                    0
                                                 </span>
-                                            </div>
-                                        </td>
+                                            </td>
+                                        @endif
                                         <td class="px-4 py-3 flex items-center justify-end">
                                             <button
                                                 class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
@@ -126,21 +131,52 @@
                                             </button>
                                         </td>
                                     </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="100%"
-                                                class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                                                No items securely found in this branch!
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                                @empty
+                                    <tr>
+                                        <td colspan="100%"
+                                            class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                                            No items securely found in this branch!
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
-
                 </div>
+
             </div>
         </div>
-        </div>
-    </x-app-layout>
+    </div>
+
+    <!-- Live Search Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('simple-search');
+
+            if (searchInput) {
+                // Prevent form submission if users hit enter on search
+                searchInput.closest('form').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                });
+
+                // Filter table rows on input change
+                searchInput.addEventListener('input', function(e) {
+                    const query = e.target.value.toLowerCase().trim();
+                    const rows = document.querySelectorAll('.searchable-row');
+
+                    rows.forEach(row => {
+                        const sku = row.querySelector('.sku-col').textContent.toLowerCase();
+                        const name = row.querySelector('.name-col').textContent.toLowerCase();
+
+                        // Show row if it matches query, hide if it doesn't
+                        if (sku.includes(query) || name.includes(query)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</x-app-layout>

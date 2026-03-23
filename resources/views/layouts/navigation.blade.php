@@ -21,13 +21,10 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Current Branch Display -->
                 <div class="hidden sm:flex sm:items-center text-sm text-gray-500 dark:text-gray-400 font-medium">
-                    @if (session('branch_id'))
-                        @php $currentBranch = \App\Models\Branch::find(session('branch_id')); @endphp
-                        @if ($currentBranch)
-                            <span class="mr-4 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-md">
-                                {{ $currentBranch->name }}
-                            </span>
-                        @endif
+                    @if (isset($currentBranch))
+                        <span class="mr-4 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-md">
+                            {{ $currentBranch->name }}
+                        </span>
                     @endif
                 </div>
                 <x-dropdown align="right" width="48">
@@ -94,13 +91,10 @@
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
                 <!-- Current Branch Display -->
-                @if (session('branch_id'))
-                    @php $currentBranch = \App\Models\Branch::find(session('branch_id')); @endphp
-                    @if ($currentBranch)
-                        <div class="font-medium text-sm text-gray-500">
-                            {{ $currentBranch->name }}
-                        </div>
-                    @endif
+                @if (isset($currentBranch))
+                    <div class="font-medium text-sm text-gray-500">
+                        {{ $currentBranch->name }}
+                    </div>
                 @endif
 
             </div>
