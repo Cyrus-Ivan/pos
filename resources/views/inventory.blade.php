@@ -12,7 +12,7 @@
                     <div class="flex items-center justify-between pb-4 flex-shrink-0">
                         {{-- search --}}
                         <div class="sm:w-auto">
-                            <form class="flex items-center" method="GET" action="/">
+                            <form class="flex items-center" onsubmit="event.preventDefault();">
                                 <label for="simple-search" class="sr-only">Search</label>
                                 <div class="relative w-auto">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -132,9 +132,30 @@
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('simple-search');
+            const tableRows = document.querySelectorAll('tbody tr');
+
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+
+                tableRows.forEach(row => {
+                    // Skip the empty list message row if it exists
+                    if (row.querySelector('td[colspan="100%"]')) return;
+
+                    const rowText = row.textContent.toLowerCase();
+                    if (rowText.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>
