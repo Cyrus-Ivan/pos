@@ -55,10 +55,9 @@
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}" id="logoutFormDesktop">
                             @csrf
-                            <input type="hidden" name="latitude" class="logout_latitude">
-                            <input type="hidden" name="longitude" class="logout_longitude">
-                            <x-dropdown-link href="#"
-                                onclick="event.preventDefault(); handleLogout('logoutFormDesktop');">
+                            <x-dropdown-link :href="route('logout')"
+                                onclick="event.preventDefault();
+                                                this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
@@ -113,110 +112,13 @@
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}" id="logoutFormMobile">
                     @csrf
-                    <input type="hidden" name="latitude" class="logout_latitude">
-                    <input type="hidden" name="longitude" class="logout_longitude">
-                    <button type="button" onclick="handleLogout('logoutFormMobile')"
-                        class="w-full text-left px-4 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100">
+                    <x-responsive-nav-link view='mobile' :href="route('logout')"
+                        onclick="event.preventDefault();
+                                        this.closest('form').submit();">
                         {{ __('Log Out') }}
-                    </button>
+                    </x-responsive-nav-link>
                 </form>
             </div>
         </div>
     </div>
 </nav>
-
-<script>
-    let latestCoords = {
-        latitude: '',
-        longitude: ''
-    };
-
-    function updateCoords() {
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                latestCoords.latitude = position.coords.latitude;
-                latestCoords.longitude = position.coords.longitude;
-                document.querySelectorAll('.logout_latitude').forEach(input => input.value = latestCoords.latitude);
-                document.querySelectorAll('.logout_longitude').forEach(input => input.value = latestCoords
-                    .longitude);
-            },
-            error => {
-                // Optionally handle errors silently or log them
-            }, {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 0
-            }
-        );
-
-        console.log(latestCoords);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        updateCoords();
-        setInterval(updateCoords, 5 * 60 * 1000); // every 5 minutes
-    });
-
-    function handleLogout(formId) {
-        const form = document.getElementById(formId);
-        const button = form.querySelector('button') || form.querySelector('a');
-        const latInput = form.querySelector('input[name="latitude"]');
-        const lngInput = form.querySelector('input[name="longitude"]');
-
-        // Disable the button to prevent multiple clicks
-        if (button) {
-            button.style.pointerEvents = 'none';
-            button.style.opacity = '0.5';
-        }
-
-        // Use latest tracked coordinates if available
-        if (latestCoords.latitude !== '' && latestCoords.longitude !== '') {
-            latInput.value = latestCoords.latitude;
-            lngInput.value = latestCoords.longitude;
-            form.submit();
-            return;
-        }
-
-        // Fallback: fetch location if no recent coords
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                latestCoords.latitude = position.coords.latitude;
-                latestCoords.longitude = position.coords.longitude;
-                latInput.value = position.coords.latitude;
-                lngInput.value = position.coords.longitude;
-                form.submit();
-            },
-            error => {
-                // Re-enable the button
-                if (button) {
-                    button.style.pointerEvents = 'auto';
-                    button.style.opacity = '1';
-                }
-
-                // Show detailed error message
-                let errorMessage = 'Location permission is required to logout.\n\n';
-
-                switch (error.code) {
-                    case error.PERMISSION_DENIED:
-                        errorMessage +=
-                            'You denied location access. Please enable location permissions in your browser settings and try again.';
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        errorMessage += 'Location information is unavailable. Please check your device settings.';
-                        break;
-                    case error.TIMEOUT:
-                        errorMessage += 'Location request timed out. Please try again.';
-                        break;
-                    default:
-                        errorMessage += 'An unknown error occurred while getting your location.';
-                }
-
-                alert(errorMessage);
-            }, {
-                enableHighAccuracy: true,
-                timeout: 500,
-                maximumAge: 0
-            }
-        );
-    }
-</script>

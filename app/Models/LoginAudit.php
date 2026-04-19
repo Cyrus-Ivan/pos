@@ -11,8 +11,6 @@ class LoginAudit extends Model
         'user_id',
         'photo_path',
         'photo_taken_at',
-        'latitude',
-        'longitude',
         'type'
     ];
 

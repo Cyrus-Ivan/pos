@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Branch extends Model
 {
 
-    protected $fillable = ['code', 'name', 'address'];
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    protected $fillable = ['id', 'code', 'name', 'address'];
 
     public function loginAudits()
     {

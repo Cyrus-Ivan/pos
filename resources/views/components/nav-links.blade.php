@@ -12,11 +12,11 @@
     </x-responsive-nav-link>
 @endauth
 
-@auth
+@canany(['admin', 'owner'])
     <x-responsive-nav-link :view="$view" :href="route('inventory')" :active="request()->routeIs('inventory')">
         {{ __('Inventory') }}
     </x-responsive-nav-link>
-@endauth
+@endcanany
 
 @can(['owner'])
     <x-responsive-nav-link :view="$view" :href="route('employees')" :active="request()->routeIs('employees')">

@@ -54,33 +54,29 @@
                                 <tr>
                                     <th scope="col" class="px-4 py-3 w-40">SKU</th>
                                     <th scope="col" class="px-4 py-3 w-90">Item Name</th>
-                                    {{-- Does not show Item Cost to others --}}
-                                    @canany(['owner', 'admin'])
-                                        <th scope="col" class="px-4 py-3 w-28 text-center">Item Cost</th>
-                                    @endcanany
-
+                                    <th scope="col" class="px-4 py-3 w-28 text-center">Item Cost</th>
                                     <th scope="col" class="px-4 py-3 w-40 text-center">Selling Price</th>
-                                    {{-- allow owner and admin to choose what branch to show inventory stocks --}}
-                                    @canany(['owner', 'admin'])
-                                        <th scope="col" class="px-4 py-3 w-40">
-                                            <select
-                                                class="border-0 bg-transparent p-0 pr-6 text-xs font-bold uppercase text-gray-700 hover:text-gray-900 focus:ring-0 dark:text-gray-400 dark:hover:text-gray-300 cursor-pointer w-full">
-                                                <option value="{{ $current_branch->branch_id }}"
+
+                                    <th scope="col" class="px-4 py-3 w-40">
+                                        <select onchange="window.location.href = '?branch_id=' + this.value"
+                                            class="border-0 bg-transparent p-0 pr-6 text-xs font-bold uppercase text-gray-700 hover:text-gray-900 focus:ring-0 dark:text-gray-400 dark:hover:text-gray-300 cursor-pointer w-full">
+                                            @if ($current_branch)
+                                                <option value="{{ $current_branch->id }}"
                                                     class="dark:bg-gray-800 text-gray-900 dark:text-gray-100" selected>
                                                     {{ $current_branch->name }}
                                                 </option>
-                                                @foreach ($branches as $branch)
-                                                    <option value="{{ $branch->branch_id }}"
+                                            @endif
+                                            @foreach ($branches as $branch)
+                                                @if (!$current_branch || $branch->id !== $current_branch->id)
+                                                    <option value="{{ $branch->id }}"
                                                         class="dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                                                         {{ $branch->name }}
                                                     </option>
-                                                @endforeach
-                                            </select>
-                                        </th>
-                                    @else
-                                        {{-- for cashiers, show only the stocks for current branch --}}
-                                        <th scope="col" class="px-4 py-3 w-28">Stocks</th>
-                                    @endcanany
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </th>
+
                                     <th scope="col" class="px-4 py-3">
                                         <span class="sr-only">Actions</span>
                                     </th>
@@ -88,7 +84,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($items as $item)
+                                @forelse ($items as $item)
                                     <tr
                                         class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
                                         <td class="px-4 py-3   ">
@@ -98,19 +94,17 @@
                                             class="px-4  py-3 font-medium text-gray-900  dark:text-white whitespace-nowrap">
                                             {{ $item->item_name }}
                                         </td>
-                                        @canany(['owner', 'admin'])
-                                            <td class="px-4 py-3 text-center">
-                                                ₱{{ number_format($item->cost, 2) }}
-                                            </td>
-                                        @endcanany
+                                        <td class="px-4 py-3 text-center">
+                                            ₱{{ number_format($item->cost, 2) }}
+                                        </td>
                                         <td class="px-4 py-3 text-center">
                                             ₱{{ number_format($item->selling_price, 2) }}
                                         </td>
                                         <td class="px-4 py-3">
                                             <div class="flex justify-center">
                                                 <span
-                                                    class="px-2 py-1 font-semibold rounded-md {{ $stock > 10 ? ' text-green-800 dark:text-green-300' : ($stock > 0 ? ' text-yellow-800 dark:text-yellow-300' : ' text-red-800 dark:text-red-300') }}">
-                                                    {{ $stock }}
+                                                    class="px-2 py-1 font-semibold rounded-md {{ $item->current_stock > 10 ? ' text-green-800 dark:text-green-300' : ($item->current_stock > 0 ? ' text-yellow-800 dark:text-yellow-300' : ' text-red-800 dark:text-red-300') }}">
+                                                    {{ $item->current_stock }}
                                                 </span>
                                             </div>
                                         </td>
@@ -126,21 +120,21 @@
                                             </button>
                                         </td>
                                     </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="100%"
-                                                class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                                                No items securely found in this branch!
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                                @empty
+                                    <tr>
+                                        <td colspan="100%"
+                                            class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                                            No items securely found in this branch!
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
-
                 </div>
+
             </div>
         </div>
-        </div>
-    </x-app-layout>
+    </div>
+    </div>
+</x-app-layout>

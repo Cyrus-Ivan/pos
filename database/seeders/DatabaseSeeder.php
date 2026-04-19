@@ -25,9 +25,8 @@ class DatabaseSeeder extends Seeder
 
         // 2. Create Branches manually (since BranchFactory doesn't exist)
         $branches = collect([
-            Branch::create(['code' => 'BR-001', 'name' => 'Main Branch', 'address' => '123 Main St']),
-            Branch::create(['code' => 'BR-002', 'name' => 'Malls Branch', 'address' => '456 Mall Ave']),
-            Branch::create(['code' => 'BR-003', 'name' => 'East Branch', 'address' => '789 East Blvd']),
+            Branch::create(['id' => 'V5', 'name' => 'NXT V5', 'address' => 'Banga I, Plaridel']),
+            Branch::create(['id' => 'V9', 'name' => 'NXT V9', 'address' => 'Sto Nino, Plaridel']),
         ]);
 
         // 3. Generate Items

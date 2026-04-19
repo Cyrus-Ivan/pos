@@ -17,12 +17,10 @@ return new class extends Migration {
                 ->references('id')
                 ->on('users');
 
-            $table->foreignId('branch_id')
+            $table->string('branch_id');
+            $table->foreign('branch_id')
                 ->references('id')
                 ->on('branches');
-
-            $table->decimal('latitude', 10, 7);
-            $table->decimal('longitude', 10, 7);
 
             $table->string('photo_path')->nullable();
             $table->timestamp('photo_taken_at')->nullable(); // when photo was taken
