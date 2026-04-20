@@ -2,7 +2,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}" id="loginForm">
+    <form method="POST" action="{{ route('login') }}" x-data="loginComponent()" @submit="submitForm($event)">
         @csrf
 
         <!-- Email Address -->
@@ -45,29 +45,31 @@
 
 
         {{-- Camera Preview --}}
-        <div class="mt-6">
-            <div id="camera-error"
-                class="hidden mb-2 p-3 text-sm text-red-700 bg-red-100 rounded-md dark:bg-red-200 dark:text-red-800"
+        <div class="mt-6" x-init="initCamera()">
+            <div x-show="cameraError" x-text="cameraError" x-cloak style="display: none"
+                class="mb-2 p-3 text-sm text-red-700 bg-red-100 rounded-md dark:bg-red-200 dark:text-red-800"
                 role="alert"></div>
 
-            <video id="video" autoplay playsinline class="w-full rounded hidden"></video>
-            <canvas id="canvas" class="hidden"></canvas>
+            <video x-ref="video" autoplay playsinline class="w-full rounded" x-show="!isCaptured && !cameraError"
+                x-cloak style="display: none;"></video>
+            <canvas x-ref="canvas" class="hidden"></canvas>
 
-            <img id="preview" class="hidden rounded border" />
+            <img x-ref="preview" class="w-full rounded border" :src="photoData" x-show="isCaptured" x-cloak
+                style="display: none;" />
 
-            <input type="hidden" name="photo" id="photo">
+            <input type="hidden" name="photo" :value="photoData">
             <input type="hidden" name="latitude" id="latitude">
             <input type="hidden" name="longitude" id="longitude">
-            <input type="hidden" name="taken_at" id="taken_at">
+            <input type="hidden" name="taken_at" :value="timestamp">
 
-            <button type="button" id="capture" class="mt-3 w-full px-4 py-2 bg-indigo-600 text-white rounded">
-                Capture Photo
-            </button>
-            <button type="button" id="recapture"
-                class=" mt-3 w-full px-4 py-2 bg-indigo-600 text-white rounded hidden">Recapture</button>
+            <x-primary-button type="button" @click="toggleCapture" x-bind:disabled="cameraError !== null"
+                class="w-full mt-4 justify-center"
+                x-bind:class="{ 'opacity-50 cursor-not-allowed': cameraError !== null }">
+                <span x-text="isCaptured ? 'Recapture' : 'Capture Photo'"></span>
+            </x-primary-button>
 
-            <ul id="photo-error"
-                class="hidden mt-3 mb-2 p-3 text-sm text-red-700 bg-red-100 rounded-md dark:bg-red-200 dark:text-red-800"
+            <ul x-show="showPhotoError" x-cloak style="display: none;"
+                class="mt-3 mb-2 p-3 text-sm text-red-700 bg-red-100 rounded-md dark:bg-red-200 dark:text-red-800"
                 role="alert">
                 <li>A photo is required to login.</li>
             </ul>
@@ -77,7 +79,7 @@
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox"
-                    class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800"
+                    class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 shadow-sm"
                     name="remember">
                 <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
             </label>
@@ -92,97 +94,57 @@
 </x-guest-layout>
 
 <script>
-    (async () => {
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const preview = document.getElementById('preview');
+    function loginComponent() {
+        return {
+            isCaptured: false,
+            cameraError: null,
+            showPhotoError: false,
+            photoData: '',
+            timestamp: '',
 
-        const captureBtn = document.getElementById('capture');
-        const recaptureBtn = document.getElementById('recapture');
-        const loginBtn = document.getElementById('loginBtn');
-        const cameraError = document.getElementById('camera-error');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const loginForm = document.getElementById('loginForm');
-        const photoError = document.getElementById('photo-error');
+            async initCamera() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: "user"
+                        },
+                        audio: false
+                    });
+                    this.$refs.video.srcObject = stream;
+                } catch (error) {
+                    this.cameraError =
+                        "Camera is disabled, missing, or cannot be accessed. Please check your permissions and hardware.";
+                }
+            },
 
-        loginForm.addEventListener('submit', function(e) {
-            const hasPhoto = document.getElementById('photo').value !== '';
-            if (!hasPhoto) {
-                e.preventDefault();
-                photoError.classList.remove('hidden');
-                photoError.classList.add('block');
-            }
-        });
+            toggleCapture() {
+                if (!this.isCaptured) {
+                    const video = this.$refs.video;
+                    const canvas = this.$refs.canvas;
 
-        function checkLoginState() {
-            const hasPhoto = document.getElementById('photo').value !== '';
-            if (hasPhoto) {
-                photoError.classList.add('hidden');
-                photoError.classList.remove('block');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, 0, 0);
+
+                    this.photoData = canvas.toDataURL('image/jpeg');
+                    this.timestamp = Math.floor(Date.now() / 1000);
+
+                    this.isCaptured = true;
+                    this.showPhotoError = false;
+                } else {
+                    this.photoData = '';
+                    this.timestamp = '';
+                    this.isCaptured = false;
+                }
+            },
+
+            submitForm(e) {
+                if (!this.isCaptured) {
+                    e.preventDefault();
+                    this.showPhotoError = true;
+                }
             }
         }
-
-        emailInput.addEventListener('input', checkLoginState);
-        passwordInput.addEventListener('input', checkLoginState);
-
-        checkLoginState();
-
-        // CAMERA (single permission request)
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: "user"
-                },
-                audio: false
-            });
-
-            video.srcObject = stream;
-            video.classList.remove('hidden');
-        } catch (error) {
-            cameraError.textContent =
-                "Camera is disabled, missing, or cannot be accessed. Please check your permissions and hardware.";
-            cameraError.classList.remove('hidden');
-            captureBtn.disabled = true;
-            captureBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        }
-
-        // CAPTURE
-        captureBtn.onclick = () => {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0);
-
-            const dataUrl = canvas.toDataURL('image/jpeg');
-
-            document.getElementById('photo').value = dataUrl;
-            document.getElementById('taken_at').value = Math.floor(Date.now() / 1000);
-
-            // UI switch: live → preview
-            preview.src = dataUrl;
-            preview.classList.remove('hidden');
-
-            video.classList.add('hidden');
-            captureBtn.classList.add('hidden');
-            recaptureBtn.classList.remove('hidden');
-
-            checkLoginState();
-        };
-
-        // RECAPTURE
-        recaptureBtn.onclick = () => {
-            preview.classList.add('hidden');
-            video.classList.remove('hidden');
-
-            document.getElementById('photo').value = '';
-            document.getElementById('taken_at').value = '';
-
-            captureBtn.classList.remove('hidden');
-            recaptureBtn.classList.add('hidden');
-
-            checkLoginState();
-        };
-    })();
+    }
 </script>

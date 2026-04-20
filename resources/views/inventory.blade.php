@@ -34,16 +34,15 @@
                         {{-- add new --}}
                         <div
                             class="md:w-auto flex flex-col space-y-2 md:space-y-0 items-stretch justify-end md:space-x-3 flex-shrink-0">
-                            <button type="button" id="createProductModalButton" data-modal-target="createProductModal"
-                                data-modal-toggle="createProductModal"
-                                class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+
+                            <x-borderless-button>
                                 <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path clip-rule="evenodd" fill-rule="evenodd"
                                         d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                                 </svg>
                                 Add Item
-                            </button>
+                            </x-borderless-button>
                         </div>
                     </div>
                     {{-- table --}}
@@ -60,19 +59,12 @@
                                     <th scope="col" class="px-4 py-3 w-40">
                                         <select onchange="window.location.href = '?branch_id=' + this.value"
                                             class="border-0 bg-transparent p-0 pr-6 text-xs font-bold uppercase text-gray-700 hover:text-gray-900 focus:ring-0 dark:text-gray-400 dark:hover:text-gray-300 cursor-pointer w-full">
-                                            @if ($current_branch)
-                                                <option value="{{ $current_branch->id }}"
-                                                    class="dark:bg-gray-800 text-gray-900 dark:text-gray-100" selected>
-                                                    {{ $current_branch->name }}
-                                                </option>
-                                            @endif
                                             @foreach ($branches as $branch)
-                                                @if (!$current_branch || $branch->id !== $current_branch->id)
-                                                    <option value="{{ $branch->id }}"
-                                                        class="dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-                                                        {{ $branch->name }}
-                                                    </option>
-                                                @endif
+                                                <option value="{{ $branch->id }}"
+                                                    {{ $branch->id == request('branch_id', env('BRANCH_ID')) ? 'selected' : '' }}
+                                                    class="dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+                                                    {{ $branch->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </th>
@@ -124,7 +116,7 @@
                                     <tr>
                                         <td colspan="100%"
                                             class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                                            No items securely found in this branch!
+                                            No item was found.
                                         </td>
                                     </tr>
                                 @endforelse
@@ -155,6 +147,7 @@
                         row.style.display = 'none';
                     }
                 });
+
             });
         });
     </script>

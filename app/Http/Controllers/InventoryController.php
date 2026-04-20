@@ -9,24 +9,24 @@ use App\Models\Branch;
 
 class InventoryController extends Controller
 {
-    public function index(Request $request)
+    private function getItems($branch_id)
     {
-        $branches = Branch::all();
-
-        $branchId = $request->input('branch_id');
-        $current_branch = $branchId ? $branches->firstWhere('id', $branchId) : $branches->first();
-
-        $items = Item::with([
-            'inventories' => function ($query) use ($current_branch) {
-                if ($current_branch) {
-                    $query->where('branch_id', $current_branch->id);
-                }
+        return Item::with([
+            'inventories' => function ($query) use ($branch_id) {
+                $query->where('branch_id', $branch_id);
             }
         ])->get()->map(function ($item) {
             $item->current_stock = $item->inventories->first()?->stock ?? 0;
             return $item;
         });
+    }
 
-        return view('inventory', compact('items', 'branches', 'current_branch'));
+    public function index(Request $request)
+    {
+        $branches = Branch::all();
+        $branch_id = $request->input('branch_id', env('BRANCH_ID'));
+        $items = $this->getItems($branch_id);
+
+        return view('inventory', compact('items', 'branches'));
     }
 }
