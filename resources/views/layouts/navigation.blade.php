@@ -15,8 +15,6 @@
                 <x-nav-links view='web' />
             </div>
 
-
-
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Current Branch Display -->
@@ -48,8 +46,39 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <!-- Theme Toggle -->
+                        <x-dropdown-link type="button"
+                            onclick="document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light')">
+                            <div class="flex items-center justify-between">
+                                <span class="block dark:hidden">{{ __('Dark Mode') }}</span>
+                                <span class="hidden dark:block">{{ __('Light Mode') }}</span>
+
+                                <!-- Moon icon for light mode -->
+                                <svg class="w-4 h-4 mr-2 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                                </svg>
+                                <!-- Sun icon for dark mode -->
+                                <svg class="w-4 h-4 mr-2 hidden dark:block" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                                    </path>
+                                </svg>
+
+                            </div>
+                        </x-dropdown-link>
+
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            <div class="flex items-center justify-between">
+
+                                <span>{{ __('Profile') }}</span>
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -58,9 +87,19 @@
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                <div class="flex items-center justify-between">
+                                    <span>{{ __('Log Out') }}</span>
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                        </path>
+                                    </svg>
+                                </div>
                             </x-dropdown-link>
                         </form>
+
+
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -104,9 +143,38 @@
 
             </div>
 
-            <div class="mt-3 space-y-1">
+            <div class="mt-3 text-gray-500 dark:text-gray-400 space-y-1">
+                <!-- Theme Toggle Mobile -->
+                <button type="button"
+                    onclick="document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light')"
+                    class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:text-gray-800 dark:focus:text-gray-200 focus:bg-gray-50 dark:focus:bg-gray-700 focus:border-gray-300 dark:focus:border-gray-600 transition duration-150 ease-in-out">
+                    <div class="flex items-center">
+                        <!-- Moon icon for light mode -->
+                        <svg class="w-5 h-5 mr-3 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                        <!-- Sun icon for dark mode -->
+                        <svg class="w-5 h-5 mr-3 hidden dark:block" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                            </path>
+                        </svg>
+                        <span class="block dark:hidden">{{ __('Dark Mode') }}</span>
+                        <span class="hidden dark:block">{{ __('Light Mode') }}</span>
+                    </div>
+                </button>
+
                 <x-responsive-nav-link view="mobile" :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
-                    {{ __('Profile') }}
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span>{{ __('Profile') }}</span>
+                    </div>
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
@@ -115,7 +183,15 @@
                     <x-responsive-nav-link view='mobile' :href="route('logout')"
                         onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                </path>
+                            </svg>
+                            <span>{{ __('Log Out') }}</span>
+                        </div>
                     </x-responsive-nav-link>
                 </form>
             </div>
