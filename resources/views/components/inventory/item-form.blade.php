@@ -1,7 +1,8 @@
 @props(['id' => null, 'item' => null, 'branches' => null])
 
 <x-modal id="{{ $id }}" title="Add New Item" :reset="is_null($item)">
-    <form>
+    <form action="{{ route('inventory.create') }}" method="POST" id="item-form-{{ $id }}">
+        @csrf
         <div class="space-y-4">
             {{-- SKU --}}
             <div>
@@ -64,9 +65,9 @@
             </div>
         </div>
         <x-slot:footer>
-            <x-borderless-button
+            <x-borderless-button type="button"
                 @click="$dispatch('close-modal', { id: '{{ $id }}' })">Cancel</x-borderless-button>
-            <x-primary-button>Confirm</x-primary-button>
+            <x-primary-button form="item-form-{{ $id }}">Confirm</x-primary-button>
         </x-slot:footer>
     </form>
 </x-modal>

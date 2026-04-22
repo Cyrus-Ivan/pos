@@ -29,4 +29,33 @@ class InventoryController extends Controller
 
         return view('inventory', compact('items', 'branches'));
     }
+
+    public function create(Request $request)
+    {
+        $validated = $request->validate([
+            'sku' => 'required|string|unique:items,sku|max:255',
+            'item-name' => 'required|string|max:255',
+            'item-cost' => 'required|numeric|min:0',
+            'selling-price' => 'required|numeric|min:0',
+            'stocks' => 'required|array',
+            'stocks.*' => 'required|integer|min:0',
+        ]);
+
+        $item = Item::create([
+            'sku' => $validated['sku'],
+            'item_name' => $validated['item-name'],
+            'cost' => $validated['item-cost'],
+            'selling_price' => $validated['selling-price'],
+        ]);
+
+        foreach ($validated['stocks'] as $branch_id => $stock) {
+            Inventory::create([
+                'item_id' => $item->id,
+                'branch_id' => $branch_id,
+                'stock' => $stock,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Item created successfully!');
+    }
 }
