@@ -1,3 +1,11 @@
+{{--
+    USAGE:
+        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+
+    PROPS:
+        messages (required) — The array of error messages to display
+--}}
+
 @props(['messages'])
 
 @if ($messages)

@@ -1,3 +1,14 @@
+{{--
+    USAGE:
+        <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" view="web">
+            {{ __('Dashboard') }}
+        </x-responsive-nav-link>
+
+    PROPS:
+        active (optional) — boolean to indicate if the link is active
+        view (required)   — 'web' or 'mobile' to determine the appropriate layout classes
+--}}
+
 @props(['active', 'view'])
 
 @php

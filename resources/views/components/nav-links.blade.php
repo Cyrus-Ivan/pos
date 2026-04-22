@@ -1,3 +1,12 @@
+{{--
+    USAGE:
+        <x-nav-links view="web" />
+        <x-nav-links view="mobile" />
+
+    PROPS:
+        view (required) — 'web' or 'mobile' to determine the style of links
+--}}
+
 @props(['view'])
 
 @auth

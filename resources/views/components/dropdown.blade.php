@@ -1,3 +1,21 @@
+{{--
+    USAGE:
+        <x-dropdown align="right" width="48">
+            <x-slot name="trigger">
+                <button>Open Dropdown</button>
+            </x-slot>
+
+            <x-slot name="content">
+                <x-dropdown-link href="#">Link 1</x-dropdown-link>
+            </x-slot>
+        </x-dropdown>
+
+    PROPS:
+        align (optional)          — left | right | top (default: right)
+        width (optional)          — width class value, e.g. 48 (default: 48)
+        contentClasses (optional) — classes for the dropdown content container
+--}}
+
 @props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white dark:bg-gray-700'])
 
 @php

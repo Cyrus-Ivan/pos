@@ -1,3 +1,11 @@
+{{--
+    USAGE:
+        <x-search-bar id="table-search" />
+
+    PROPS:
+        id (optional) — The ID to place on the input element
+--}}
+
 @props(['id' => null])
 
 <div class="sm:w-auto">

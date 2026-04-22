@@ -1,3 +1,11 @@
+{{--
+    USAGE:
+        <x-auth-session-status class="mb-4" :status="session('status')" />
+
+    PROPS:
+        status (required) — The status message to display (returns nothing if null)
+--}}
+
 @props(['status'])
 
 @if ($status)
