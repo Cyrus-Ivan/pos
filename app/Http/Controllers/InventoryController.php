@@ -7,8 +7,10 @@ use App\Models\Inventory;
 use App\Models\Item;
 use App\Models\Branch;
 
-class InventoryController extends Controller
+
+class InventoryController extends Controller 
 {
+    
     private function getItems($branch_id)
     {
         return Item::with([
