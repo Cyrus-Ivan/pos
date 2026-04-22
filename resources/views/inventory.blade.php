@@ -117,11 +117,16 @@
                     // Skip the empty list message row if it exists
                     if (row.querySelector('td[colspan="100%"]')) return;
 
-                    const rowText = row.textContent.toLowerCase();
-                    if (rowText.includes(searchTerm)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 2) {
+                        const skuText = cells[0].textContent.toLowerCase();
+                        const itemNameText = cells[1].textContent.toLowerCase();
+
+                        if (skuText.includes(searchTerm) || itemNameText.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
                     }
                 });
 
