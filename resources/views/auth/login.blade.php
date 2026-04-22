@@ -58,8 +58,6 @@
                 style="display: none;" />
 
             <input type="hidden" name="photo" :value="photoData">
-            <input type="hidden" name="latitude" id="latitude">
-            <input type="hidden" name="longitude" id="longitude">
             <input type="hidden" name="taken_at" :value="timestamp">
 
             <x-primary-button type="button" @click="toggleCapture" x-bind:disabled="cameraError !== null"
