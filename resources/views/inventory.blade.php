@@ -13,7 +13,7 @@
             <x-search-bar id="search-item" />
 
             {{-- Add an Item --}}
-            <x-borderless-button>
+            <x-borderless-button x-data @click="$dispatch('open-modal', { id: 'add-new-item' })">
                 <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true">
                     <path clip-rule="evenodd" fill-rule="evenodd"
@@ -101,6 +101,13 @@
             </table>
         </div>
     </x-main-card>
+    <x-modal id="add-new-item" title="Add New Item">
+        <x-inventory.item-form />
+        <x-slot:footer>
+            <x-borderless-button @click="$dispatch('close-modal', { id: 'my-modal' })">Cancel</x-borderless-button>
+            <x-primary-button>Confirm</x-primary-button>
+        </x-slot:footer>
+    </x-modal>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
