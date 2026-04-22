@@ -4,8 +4,8 @@
             Your content here...
  
             <x-slot:footer>
-                <button @click="$dispatch('close-modal', { id: 'my-modal' })">Cancel</button>
-                <button>Confirm</button>
+                <x-borderless-button @click="$dispatch('close-modal', { id: 'my-modal' })">Cancel</x-borderless-button>
+                <x-primary-button>Confirm</x-primary-button>
             </x-slot:footer>
         </x-modal>
  
