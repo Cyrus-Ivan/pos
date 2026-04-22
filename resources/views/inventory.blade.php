@@ -101,13 +101,9 @@
             </table>
         </div>
     </x-main-card>
-    <x-modal id="add-new-item" title="Add New Item">
-        <x-inventory.item-form />
-        <x-slot:footer>
-            <x-borderless-button @click="$dispatch('close-modal', { id: 'my-modal' })">Cancel</x-borderless-button>
-            <x-primary-button>Confirm</x-primary-button>
-        </x-slot:footer>
-    </x-modal>
+
+    <x-inventory.item-form :branches="$branches" id="add-new-item" />
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
