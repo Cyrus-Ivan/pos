@@ -63,7 +63,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->authenticate();
         $request->session()->regenerate();
-        $request->session()->put('branch_id', env('BRANCH_ID'));
 
         // Audit log
         Auth::user()->loginAudits()->create([
