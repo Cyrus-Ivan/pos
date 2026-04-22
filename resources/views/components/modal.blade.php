@@ -20,9 +20,10 @@
         title       (optional) — heading text
         size        (optional) — sm | md | lg | xl  (default: md)
         dismissible (optional) — clicking backdrop or × closes modal (default: true)
+        reset       (optional) — whether to clear out internal form inputs when closing (default: false)
 --}}
 
-@props(['id', 'title' => '', 'size' => 'md', 'dismissible' => true])
+@props(['id', 'title' => '', 'size' => 'md', 'dismissible' => true, 'reset' => false])
 
 @php
     $sizeClass = match ($size) {
@@ -33,15 +34,28 @@
     };
 @endphp
 
-<div x-data="{ open: false }" x-on:open-modal.window="$event.detail.id === '{{ $id }}' && (open = true)"
-    x-on:close-modal.window="$event.detail.id === '{{ $id }}' && (open = false)"
-    x-on:keyup.escape.window="open = false">
+<div x-data="{
+    open: false,
+    resetInputs() {
+        @if ($reset) // Find all inputs, textareas, and selects within this modal and clear them
+                $el.querySelectorAll('input, textarea, select').forEach(input => {
+                    if (input.type === 'checkbox' || input.type === 'radio') {
+                        input.checked = false;
+                    } else if (input.type !== 'submit' && input.type !== 'button') {
+                        // Restore default value if available, else empty
+                        input.value = input.defaultValue || '';
+                    }
+                }); @endif
+    }
+}" x-on:open-modal.window="$event.detail.id === '{{ $id }}' && (open = true)"
+    x-on:close-modal.window="$event.detail.id === '{{ $id }}' && (open = false); resetInputs()"
+    x-on:keyup.escape.window="if (open) { open = false; resetInputs(); }">
     {{-- Backdrop --}}
     <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-        @if ($dismissible) x-on:click="open = false" @endif class="fixed inset-0 z-40 bg-black/50"
-        aria-hidden="true" x-cloak></div>
+        @if ($dismissible) x-on:click="open = false; resetInputs()" @endif
+        class="fixed inset-0 z-40 bg-black/50" aria-hidden="true" x-cloak></div>
 
     {{-- Modal panel --}}
     <div x-show="open" x-transition:enter="transition ease-out duration-200"
@@ -52,7 +66,7 @@
         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
         class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true"
         @if ($title) aria-labelledby="modal-title-{{ $id }}" @endif
-        @if ($dismissible) x-on:click.self="open = false" @endif x-cloak>
+        @if ($dismissible) x-on:click.self="open = false; resetInputs()" @endif x-cloak>
         <div
             class="relative w-full {{ $sizeClass }} bg-white dark:bg-gray-800 rounded-xl shadow-xl flex flex-col max-h-[90vh]">
 
@@ -66,7 +80,7 @@
                     </h2>
 
                     @if ($dismissible)
-                        <button type="button" x-on:click="open = false"
+                        <button type="button" x-on:click="open = false; resetInputs()"
                             class="p-1 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                             aria-label="Close modal">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
