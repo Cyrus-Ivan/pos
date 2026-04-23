@@ -8,9 +8,9 @@ use App\Models\Item;
 use App\Models\Branch;
 
 
-class InventoryController extends Controller 
+class InventoryController extends Controller
 {
-    
+
     private function getItems($branch_id)
     {
         return Item::with([
@@ -35,7 +35,7 @@ class InventoryController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-            'sku' => 'required|string|unique:items,sku|max:255',
+            'sku' => 'required|string|unique:items,sku|max:16',
             'item-name' => 'required|string|max:255',
             'item-cost' => 'required|numeric|min:0',
             'selling-price' => 'required|numeric|min:0',
