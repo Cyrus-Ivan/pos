@@ -65,6 +65,13 @@
             <span x-init="$nextTick(() => $dispatch('toast', { message: @js(session($type)), type: '{{ $type }}' }))"></span>
         @endif
     @endforeach
+
+    {{-- Validation Error from $validated in controllers --}}
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <span x-init="$nextTick(() => $dispatch('toast', { message: @js($error), type: 'error' }))"></span>
+        @endforeach
+    @endif
 </div>
 
 @once
