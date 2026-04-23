@@ -8,18 +8,17 @@
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
-                autofocus autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" name="email" :value="old('email')" required autofocus
+                autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->
         <div class="mt-4" x-data="{ show: false }">
             <x-input-label for="password" :value="__('Password')" />
-
             <div class="relative">
                 <x-text-input id="password" class="block mt-1 w-full pr-10" x-bind:type="show ? 'text' : 'password'"
-                    type="password" name="password" required autocomplete="current-password" />
+                    type="password" name="password" required  />
 
                 <button type="button" @mousedown="show = true" @mouseup="show = false" @mouseleave="show = false"
                     @touchstart="show = true" @touchend="show = false"
@@ -39,9 +38,9 @@
                     </svg>
                 </button>
             </div>
-
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
+
 
 
         {{-- Camera Preview --}}
@@ -66,11 +65,8 @@
                 <span x-text="isCaptured ? 'Recapture' : 'Capture Photo'"></span>
             </x-primary-button>
 
-            <ul x-show="showPhotoError" x-cloak style="display: none;"
-                class="mt-3 mb-2 p-3 text-sm text-red-700 bg-red-100 rounded-md dark:bg-red-200 dark:text-red-800"
-                role="alert">
-                <li>A photo is required to login.</li>
-            </ul>
+            <x-input-error :messages="['⚠ A photo is required to login.']" x-show="showPhotoError" x-cloak style="display: none;" class="mt-3"
+                role="alert" />
         </div>
 
         <!-- Remember Me -->

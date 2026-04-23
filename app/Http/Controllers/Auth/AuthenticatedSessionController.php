@@ -61,7 +61,14 @@ class AuthenticatedSessionController extends Controller
         $path = 'login_photos/' . uniqid() . '.jpg';
         Storage::disk('private')->put($path, $image);
 
-        $request->authenticate();
+        try {
+            $request->authenticate();
+        } catch (ValidationException $e) {
+            return back()->withErrors([
+                'password' => '⚠ Invalid credentials',
+            ])->onlyInput('email');
+        }
+
         $request->session()->regenerate();
 
         // Audit log
