@@ -23,5 +23,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('cashier', fn($user) => $user->role === 'cashier');
         Gate::define('admin', fn($user) => $user->role === 'admin');
         Gate::define('owner', fn($user) => $user->role === 'owner');
+        // for when it allows both owner and admin
+        Gate::define('owner-admin', function ($user) {
+            return in_array($user->role, ['owner', 'admin']);
+        });
     }
 }
