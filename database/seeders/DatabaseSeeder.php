@@ -33,12 +33,9 @@ class DatabaseSeeder extends Seeder
         $items = Item::factory(20)->create();
 
         // 4. Create Inventory items for the branches
-        // We override item_id and branch_id so it skips calling new Item/Branch factories
+        // Initialize inventory for all items across all branches
         foreach ($branches as $branch) {
-            // Assign 10 random items to each branch to avoid unique constraint violations
-            $branchItems = $items->random(10);
-
-            foreach ($branchItems as $item) {
+            foreach ($items as $item) {
                 Inventory::factory()->create([
                     'item_id' => $item->id,
                     'branch_id' => $branch->id,
