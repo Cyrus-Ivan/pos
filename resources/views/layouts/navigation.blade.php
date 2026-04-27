@@ -12,13 +12,13 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <x-nav-links view='web' />
+                <x-nav-links view='web' class="hidden md:flex" />
             </div>
 
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div class="hidden md:flex md:items-center md:ms-6">
                 <!-- Current Branch Display -->
-                <div class="hidden sm:flex sm:items-center text-sm text-gray-500 dark:text-gray-400 font-medium">
+                <div class=" md:items-center text-sm text-gray-500 dark:text-gray-400 font-medium">
                     <span class="mr-4 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-md">
                         {{ \App\Models\Branch::find(env('BRANCH_ID'))->name }}
                     </span>
@@ -100,7 +100,7 @@
             </div>
 
             <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
+            <div class="-me-2 flex items-center md:hidden">
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@
     </div>
 
     <!-- Responsive Navigation Menu (Hamburger) -->
-    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
+    <div :class="{ 'block': open, 'hidden': !open }" class="hidden md:hidden">
 
         <!-- Navigation Links (Hamburger) -->
         <x-nav-links view='mobile' />
