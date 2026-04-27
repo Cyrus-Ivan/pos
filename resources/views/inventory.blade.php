@@ -13,7 +13,7 @@
             <x-search-bar id="search-item" />
 
             {{-- Add an Item --}}
-            <x-borderless-button x-data @click="$dispatch('open-modal', { id: 'add-new-item' })">
+            <x-borderless-button x-data x-on:click="$dispatch('open-modal', { id: 'add-new-item' })">
                 <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true">
                     <path clip-rule="evenodd" fill-rule="evenodd"
@@ -24,82 +24,60 @@
 
         </div>
 
-        {{-- table --}}
-        <div class="flex-1 overflow-auto rounded-lg">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead
-                    class="w-full text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0 z-10 shadow-sm">
-                    <tr>
-                        <th scope="col" class="px-4 py-3 w-40">SKU</th>
-                        <th scope="col" class="px-4 py-3 w-90">Item Name</th>
-                        <th scope="col" class="px-4 py-3 w-28 text-center">Item Cost</th>
-                        <th scope="col" class="px-4 py-3 w-40 text-center">Selling Price</th>
+        @php
+            $inventory_columns = [
+                ['key' => 'sku', 'label' => 'SKU', 'class' => 'px-6 py-4 w-28 whitespace-nowrap'],
+                ['key' => 'name', 'label' => 'Item Name', 'class' => 'px-6 py-4 w-[20rem] whitespace-nowrap'],
+                ['key' => 'cost', 'label' => 'Cost', 'class' => 'px-6 py-4 w-28 text-right whitespace-nowrap'],
+                [
+                    'key' => 'selling_price',
+                    'label' => 'Price',
+                    'class' => 'px-6 py-4 w-28 text-right whitespace-nowrap',
+                ],
+                ['key' => 'stock', 'label' => 'Stock', 'class' => 'px-6 py-4 w-28 text-right whitespace-nowrap'],
+                ['key' => 'action', 'label' => '', 'class' => 'px-6 py-4 w-28 text-right'],
+            ];
+        @endphp
 
-                        <th scope="col" class="px-4 py-3 w-40">
-                            <select onchange="window.location.href = '?branch_id=' + this.value"
-                                class="border-0 bg-transparent p-0 pr-6 text-xs font-bold uppercase text-gray-700 hover:text-gray-900 focus:ring-0 dark:text-gray-400 dark:hover:text-gray-300 cursor-pointer w-full">
-                                @foreach ($branches as $branch)
-                                    <option value="{{ $branch->id }}"
-                                        {{ $branch->id == request('branch_id', env('BRANCH_ID')) ? 'selected' : '' }}
-                                        class="dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-                                        {{ $branch->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </th>
+        <x-responsive-table :columns="$inventory_columns">
+            @foreach ($items as $item)
+                <x-responsive-table-row>
+                    <x-responsive-table-data
+                        class="px-6 py-2 md:py-4 w-full md:w-28 text-left whitespace-nowrap md:table-cell md:text-left"
+                        column-name="SKU">
+                        {{ $item->sku }}
+                    </x-responsive-table-data>
 
-                        <th scope="col" class="px-4 py-3">
-                            <span class="sr-only">Actions</span>
-                        </th>
+                    <x-responsive-table-data
+                        class="px-6 py-4 mb-2 md:m-0 w-full md:w-[20rem] whitespace-nowrap md:table-cell text-gray-700 dark:text-white order-first md:order-none border-b md:border-none">
+                        {{ $item->name }}
+                    </x-responsive-table-data>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($items as $item)
-                        <tr
-                            class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                            <td class="px-4 py-3   ">
-                                {{ $item->sku }}
-                            </td>
-                            <td class="px-4  py-3 font-medium text-gray-900  dark:text-white whitespace-nowrap">
-                                {{ $item->item_name }}
-                            </td>
-                            <td class="px-4 py-3 text-center">
-                                ₱{{ number_format($item->cost, 2) }}
-                            </td>
-                            <td class="px-4 py-3 text-center">
-                                ₱{{ number_format($item->selling_price, 2) }}
-                            </td>
-                            <td class="px-4 py-3">
-                                <div class="flex justify-center">
-                                    <span
-                                        class="px-2 py-1 font-semibold rounded-md {{ $item->current_stock > 10 ? ' text-green-800 dark:text-green-300' : ($item->current_stock > 0 ? ' text-yellow-800 dark:text-yellow-300' : ' text-red-800 dark:text-red-300') }}">
-                                        {{ $item->current_stock }}
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3 flex items-center justify-end">
-                                <button
-                                    class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                    type="button">
-                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="100%" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                                No item was found.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                    <x-responsive-table-data
+                        class="px-6 py-2 md:py-4 w-full md:w-28 text-left whitespace-nowrap md:table-cell md:text-right"
+                        column-name="Cost">
+                        ₱{{ $item->cost }}
+                    </x-responsive-table-data>
+
+                    <x-responsive-table-data
+                        class="px-6 py-2 md:py-4 w-full md:w-28 text-left whitespace-nowrap md:table-cell md:text-right"
+                        column-name="Price">
+                        ₱{{ $item->selling_price }}
+                    </x-responsive-table-data>
+
+                    <x-responsive-table-data
+                        class="px-6 py-2 md:py-4 w-full md:w-28 text-left whitespace-nowrap md:table-cell md:text-right"
+                        column-name="Stock">
+                        {{ $item->V5 }}
+                    </x-responsive-table-data>
+
+                    <x-responsive-table-data
+                        class="px-6 py-2 md:py-4 w-full md:w-28 text-right whitespace-nowrap md:table-cell md:text-right">
+                        <x-update-delete-buttons :object="$item" />
+                    </x-responsive-table-data>
+                </x-responsive-table-row>
+            @endforeach
+        </x-responsive-table>
     </x-main-card>
 
     <x-inventory.item-form :branches="$branches" id="add-new-item" />
@@ -109,13 +87,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('search-item');
             const tableRows = document.querySelectorAll('tbody tr');
+            const noRecordFoundRow = document.getElementById('no-record-message');
 
             searchInput.addEventListener('input', function(e) {
                 const searchTerm = e.target.value.toLowerCase();
+                let visibleCount = 0;
 
                 tableRows.forEach(row => {
-                    // Skip the empty list message row if it exists
-                    if (row.querySelector('td[colspan="100%"]')) return;
+                    if (row.id === 'no-record-message') return;
 
                     const cells = row.querySelectorAll('td');
                     if (cells.length >= 2) {
@@ -124,12 +103,16 @@
 
                         if (skuText.includes(searchTerm) || itemNameText.includes(searchTerm)) {
                             row.style.display = '';
+                            visibleCount++;
                         } else {
                             row.style.display = 'none';
                         }
                     }
                 });
 
+                if (noRecordFoundRow) {
+                    noRecordFoundRow.style.display = visibleCount === 0 ? 'table-row' : 'none';
+                }
             });
         });
     </script>
