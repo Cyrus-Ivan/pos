@@ -1,10 +1,27 @@
 {{--
     USAGE:
-        <x-responsive-table>
+        A responsive layout wrapper meant to house <x-responsive-table-row> components.
+        It displays as a traditional native <table> with a sticky <thead> on desktop (md and up),
+        and scales down automatically hiding the header out-of-the-box on mobile screens.
+
+        Example from inventory.blade.php:
+        @php
+            $inventory_columns = [
+                ['key' => 'sku', 'label' => 'SKU', 'class' => 'px-6 py-4 w-28 whitespace-nowrap'],
+                ['key' => 'name', 'label' => 'Item Name', 'class' => 'px-6 py-4 w-[20rem] whitespace-nowrap'],
+                // ...
+            ];
+        @endphp
+
+        <x-responsive-table :columns="$inventory_columns">
+            @foreach ($items as $item)
+                <x-responsive-table-row>...</x-responsive-table-row>
+            @endforeach
         </x-responsive-table>
 
     PROPS:
-        
+        - columns: Array of arrays holding 'key' (identifier), 'label' (visible text in <th>), and 'class' (column specific Tailwind sizing/alignment config).
+        - Allows passing standard HTML attributes (like class) to the outermost container.
 --}}
 
 @props(['columns' => []])

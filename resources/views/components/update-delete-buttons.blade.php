@@ -1,3 +1,11 @@
+{{--
+    USAGE:
+        <x-update-delete-buttons :object="$item" />
+
+    PROPS:
+        - object: The model or object associated with these actions.
+--}}
+
 @props(['object'])
 
 <div class="flex justify-end gap-3">
