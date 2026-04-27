@@ -87,11 +87,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('search-item');
             const tableRows = document.querySelectorAll('tbody tr');
-            const noRecordFoundRow = document.getElementById('no-record-message');
+            // const noRecordFoundRow = document.getElementById('no-record-message');
 
             searchInput.addEventListener('input', function(e) {
                 const searchTerm = e.target.value.toLowerCase();
-                let visibleCount = 0;
 
                 tableRows.forEach(row => {
                     if (row.id === 'no-record-message') return;
@@ -103,16 +102,12 @@
 
                         if (skuText.includes(searchTerm) || itemNameText.includes(searchTerm)) {
                             row.style.display = '';
-                            visibleCount++;
                         } else {
                             row.style.display = 'none';
                         }
                     }
                 });
 
-                if (noRecordFoundRow) {
-                    noRecordFoundRow.style.display = visibleCount === 0 ? 'table-row' : 'none';
-                }
             });
         });
     </script>
