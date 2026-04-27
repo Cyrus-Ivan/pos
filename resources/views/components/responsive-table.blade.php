@@ -22,11 +22,29 @@
     PROPS:
         - columns: Array of arrays holding 'key' (identifier), 'label' (visible text in <th>), and 'class' (column specific Tailwind sizing/alignment config).
         - Allows passing standard HTML attributes (like class) to the outermost container.
+
+    FEATURES:
+        - Automatically handles empty states and frontend search filtering. A MutationObserver
+          watches the <tbody> for changes in child elements or style attributes (e.g. `display: none`).
+          If all rows are hidden or the table is empty, a "No matching records found" message is shown.
 --}}
 
 @props(['columns' => []])
 
-<div x-data="{ isMobile: window.innerWidth < 768 }" x-on:resize.window.debounce.150ms="isMobile = window.innerWidth < 768" x-init="isMobile = window.innerWidth < 768"
+<div x-data="{ isMobile: window.innerWidth < 768 }" x-on:resize.window.debounce.150ms="isMobile = window.innerWidth < 768" x-init="const tbody = $refs.tableBody;
+const noRecord = $refs.noRecord;
+const checkRows = () => {
+    let hasVisibleRows = false;
+    for (let i = 0; i < tbody.children.length; i++) {
+        if (tbody.children[i].style.display !== 'none') {
+            hasVisibleRows = true;
+            break;
+        }
+    }
+    noRecord.style.display = hasVisibleRows ? 'none' : '';
+};
+new MutationObserver(checkRows).observe(tbody, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+checkRows();"
     x-cloak {{ $attributes->merge(['class' => 'w-full flex flex-col min-h-0']) }}>
 
     <div class="w-full bg-white dark:bg-gray-800 md:rounded-lg flex flex-col min-h-0 overflow-y-auto">
@@ -44,14 +62,15 @@
                 </thead>
             @endisset
 
-            <tbody class="md:table-row-group divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody x-ref="tableBody" class="md:table-row-group divide-y divide-gray-200 dark:divide-gray-700">
                 {{ $slot }}
-                <tr id="no-record-message" style="{{ $slot->isEmpty() ? '' : 'display: none;' }}"
-                    class="flex flex-col md:table-row m-3 bg-gray-100/50 dark:bg-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-600/50 transition-colors">
-                    <td colspan="{{ count($columns) }}" class="text-center py-9">No matching records found.
-                    </td>
-                </tr>
+
             </tbody>
+            <tr x-ref="noRecord" id="no-record-message" style="{{ $slot->isEmpty() ? '' : 'display: none;' }}"
+                class="flex flex-col md:table-row m-3 bg-gray-100/50 dark:bg-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-600/50 transition-colors">
+                <td colspan="{{ count($columns) }}" class="text-center py-9">No matching records found.
+                </td>
+            </tr>
         </table>
     </div>
 </div>
