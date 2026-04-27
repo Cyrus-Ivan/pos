@@ -2,32 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Branch;
 use App\Models\Inventory;
 use App\Models\Item;
-use App\Models\Branch;
-
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class InventoryController extends Controller
 {
-
-    private function getItems($branch_id)
+    private function getItems()
     {
-        return Item::with([
-            'inventories' => function ($query) use ($branch_id) {
-                $query->where('branch_id', $branch_id);
-            }
-        ])->get()->map(function ($item) {
-            $item->current_stock = $item->inventories->first()?->stock ?? 0;
-            return $item;
-        });
+        return Item::query()
+            ->select(['id', 'sku', 'name', 'cost', 'selling_price'])
+            ->with([
+                'inventories' => function ($query) {
+                    $query->select(['item_id', 'branch_id', 'stock']);
+                },
+            ])
+            ->get()
+            ->map(function ($item) {
+                $item->inventories->each(function ($inventory) use ($item) {
+                    $item->setAttribute($inventory->branch_id, $inventory->stock);
+                });
+
+                $item->current_stock = $item->inventories->first()?->stock ?? 0;
+
+                return $item;
+            });
     }
 
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $branches = Branch::all();
-        $branch_id = $request->input('branch_id', env('BRANCH_ID'));
-        $items = $this->getItems($branch_id);
+        $items = $this->getItems();
 
         return view('inventory', compact('items', 'branches'));
     }

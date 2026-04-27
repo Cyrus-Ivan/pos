@@ -18,7 +18,7 @@ class ItemFactory extends Factory
     {
         return [
             'sku' => $this->faker->regexify('[A-Z0-9]{3}-[A-Z0-9]{4}'),
-            'item_name' => $this->faker->words(3, true),
+            'name' => $this->faker->words(3, true),
             'cost' => $this->faker->randomFloat(2, 5, 100),
             'selling_price' => $this->faker->randomFloat(2, 10, 200),
         ];
