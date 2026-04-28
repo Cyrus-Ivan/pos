@@ -74,9 +74,10 @@
                         class="px-6 py-2 md:py-4 w-full md:w-28 text-right whitespace-nowrap md:table-cell md:text-right">
 
                         <div class="flex justify-end gap-3">
-                            <x-update-button :object="$item" x-data
-                                x-on:click="$dispatch('open-modal', { id: 'item-form' })" />
-                            <x-delete-button />
+                            <x-update-button x-data
+                                x-on:click="$dispatch('open-modal', { id: 'item-form', item: {{ Js::from($item) }} })" />
+                            <x-delete-button x-data
+                                x-on:click="$dispatch('open-modal', { id: 'item-delete-form', item: {{ Js::from($item) }} })" />
                         </div>
                     </x-responsive-table-data>
                 </x-responsive-table-row>
@@ -85,6 +86,7 @@
     </x-main-card>
 
     <x-inventory.item-form :branches="$branches" id="item-form" />
+    <x-inventory.item-delete-form id="item-delete-form" />
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
