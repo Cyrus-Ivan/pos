@@ -95,6 +95,7 @@
                 </x-responsive-table-row>
             @endforeach
         </x-responsive-table>
+        <x-pagination :paginator="$items" :per-page-options="[10, 25, 50, 100]" />
     </x-main-card>
 
     <x-inventory.item-form :branches="$branches" id="item-form" />
