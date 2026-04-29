@@ -39,7 +39,7 @@ class InventoryController extends Controller
                 }
             },
         ])
-            ->paginate(10)
+            ->paginate($request->input('per_page', 50))
             ->through(function ($item) use ($request) {
                 if ($request->filled('branch')) {
                     $item->stock = $item->inventories->first()?->stock ?? 0;
