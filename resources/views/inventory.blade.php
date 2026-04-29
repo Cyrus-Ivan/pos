@@ -8,8 +8,19 @@
     <x-main-card>
         {{-- top of the card (e.g. search) --}}
         <div class="flex items-center justify-between pb-4 flex-shrink-0">
-            {{-- search --}}
-            <x-search-bar id="search-item" />
+            {{-- search & inventory dropdown --}}
+            <form method="GET" class="flex gap-2">
+                <x-search-bar id="search-item" />
+                <select name="branch" id="inventory_id" onchange="this.form.submit()"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-36 p-2 pr-8 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500">
+                    @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}" {{ request('branch') == $branch->id ? 'selected' : '' }}>
+                            {{ $branch->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </form>
+
 
             {{-- Add an Item --}}
             <x-borderless-button x-data x-on:click="$dispatch('open-modal', { id: 'item-form' })">
@@ -18,7 +29,7 @@
                     <path clip-rule="evenodd" fill-rule="evenodd"
                         d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                 </svg>
-                Add Item
+                <span class="hidden md:block">Add Item</span>
             </x-borderless-button>
 
         </div>
@@ -39,6 +50,7 @@
         @endphp
 
         <x-responsive-table :columns="$inventory_columns">
+
             @foreach ($items as $item)
                 <x-responsive-table-row>
                     <x-responsive-table-data
@@ -67,7 +79,7 @@
                     <x-responsive-table-data
                         class="px-6 py-2 md:py-4 w-full md:w-28 text-left whitespace-nowrap md:table-cell md:text-right"
                         column-name="Stock">
-                        {{ $item->V5 }}
+                        {{ $item->stock }}
                     </x-responsive-table-data>
 
                     <x-responsive-table-data
@@ -88,32 +100,4 @@
     <x-inventory.item-form :branches="$branches" id="item-form" />
     <x-inventory.item-delete-form id="item-delete-form" />
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('search-item');
-            const tableRows = document.querySelectorAll('tbody tr');
-            // const noRecordFoundRow = document.getElementById('no-record-message');
-
-            searchInput.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-
-                tableRows.forEach(row => {
-                    if (row.id === 'no-record-message') return;
-
-                    const cells = row.querySelectorAll('td');
-                    if (cells.length >= 2) {
-                        const skuText = cells[0].textContent.toLowerCase();
-                        const itemNameText = cells[1].textContent.toLowerCase();
-
-                        if (skuText.includes(searchTerm) || itemNameText.includes(searchTerm)) {
-                            row.style.display = '';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    }
-                });
-
-            });
-        });
-    </script>
 </x-app-layout>

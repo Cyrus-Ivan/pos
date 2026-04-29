@@ -31,23 +31,10 @@
 
 @props(['columns' => []])
 
-<div x-data="{ isMobile: window.innerWidth < 768 }" x-on:resize.window.debounce.150ms="isMobile = window.innerWidth < 768" x-init="const tbody = $refs.tableBody;
-const noRecord = $refs.noRecord;
-const checkRows = () => {
-    let hasVisibleRows = false;
-    for (let i = 0; i < tbody.children.length; i++) {
-        if (tbody.children[i].style.display !== 'none') {
-            hasVisibleRows = true;
-            break;
-        }
-    }
-    noRecord.style.display = hasVisibleRows ? 'none' : '';
-};
-new MutationObserver(checkRows).observe(tbody, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
-checkRows();"
-    x-cloak {{ $attributes->merge(['class' => 'w-full flex flex-col min-h-0']) }}>
+<div x-data="{ isMobile: window.innerWidth < 768 }" x-on:resize.window.debounce.150ms="isMobile = window.innerWidth < 768" x-cloak
+    {{ $attributes->merge(['class' => 'w-full flex flex-col min-h-0']) }}>
 
-    <div class="w-full bg-white dark:bg-gray-800 md:rounded-lg flex flex-col min-h-0 overflow-y-auto">
+    <div class="w-full bg-white dark:bg-gray-800 md:rounded-lg flex flex-col min-h-0 overflow-y-auto overflow-x-auto">
         <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
             @isset($columns)
                 <thead
