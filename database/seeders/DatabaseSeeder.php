@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 3. Generate Items
-        $items = Item::factory(20)->create();
+        $items = Item::factory(10000)->create();
 
         // 4. Create Inventory items for the branches
         // Initialize inventory for all items across all branches
