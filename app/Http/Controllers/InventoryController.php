@@ -11,31 +11,54 @@ use Illuminate\View\View;
 
 class InventoryController extends Controller
 {
-    private function getItems()
+    private function getItems(Request $request)
     {
-        return Item::query()
-            ->select(['id', 'sku', 'name', 'cost', 'selling_price'])
-            ->with([
-                'inventories' => function ($query) {
-                    $query->select(['item_id', 'branch_id', 'stock']);
-                },
-            ])
-            ->get()
-            ->map(function ($item) {
-                $item->inventories->each(function ($inventory) use ($item) {
-                    $item->setAttribute($inventory->branch_id, $inventory->stock);
-                });
+        $query = Item::query()
+            ->select(['id', 'sku', 'name', 'cost', 'selling_price']);
 
-                $item->current_stock = $item->inventories->first()?->stock ?? 0;
-
-                return $item;
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('sku', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "%{$search}%");
             });
+        }
+
+        if ($request->filled('branch')) {
+            $branchId = $request->input('branch');
+            $query->whereHas('inventories', function ($q) use ($branchId) {
+                $q->where('branch_id', $branchId);
+            });
+        }
+
+        return $query->with([
+            'inventories' => function ($query) use ($request) {
+                $query->select(['item_id', 'branch_id', 'stock']);
+                if ($request->filled('branch')) {
+                    $query->where('branch_id', $request->input('branch'));
+                }
+            },
+        ])
+            ->paginate(10)
+            ->through(function ($item) use ($request) {
+                if ($request->filled('branch')) {
+                    $item->stock = $item->inventories->first()?->stock ?? 0;
+                } else {
+                    $item->stock = $item->inventories->sum('stock');
+                }
+                return $item;
+            })->withQueryString();
     }
 
     public function index(Request $request): View
     {
+        $request->validate([
+            'search' => ['nullable', 'string', 'max:255'],
+            'branch' => ['nullable', 'exists:branches,id'],
+        ]);
+
         $branches = Branch::all();
-        $items = $this->getItems();
+        $items = $this->getItems($request);
 
         return view('inventory', compact('items', 'branches'));
     }
