@@ -43,8 +43,6 @@ class InventoryController extends Controller
             ->through(function ($item) use ($request) {
                 if ($request->filled('branch')) {
                     $item->stock = $item->inventories->first()?->stock ?? 0;
-                } else {
-                    $item->stock = $item->inventories->sum('stock');
                 }
                 return $item;
             })->withQueryString();
@@ -56,6 +54,10 @@ class InventoryController extends Controller
             'search' => ['nullable', 'string', 'max:255'],
             'branch' => ['nullable', 'exists:branches,id'],
         ]);
+
+        if (!$request->filled('branch')) {
+            $request->merge(['branch' => env('BRANCH_ID')]);
+        }
 
         $branches = Branch::all();
         $items = $this->getItems($request);
