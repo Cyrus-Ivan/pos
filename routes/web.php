@@ -9,8 +9,8 @@ Route::get('/', [PosController::class, 'index'])->middleware(['auth'])->name('po
 
 Route::middleware(['auth',])->group(function () {
     // pos
-    Route::post('/pos/cart/add', [PosController::class, 'addToCart'])->name('pos.cart.add');
-    Route::get('/pos/checkout', [PosController::class, 'checkout'])->name('pos.checkout');
+    Route::post('/pos/cart/add', [PosController::class, 'toggleItem'])->name('pos.toggle.item');
+    Route::post('/pos/checkout', [PosController::class, 'checkout'])->name('pos.checkout');
 
     // sales
     Route::view('/sales', 'sales')->name('sales');

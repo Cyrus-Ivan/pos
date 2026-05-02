@@ -10,7 +10,10 @@
             <form method="GET">
                 <x-search-bar />
             </form>
-            <x-primary-button>Checkout Items > </x-primary-button>
+            <form method="POST" action="{{ route('pos.checkout') }}">
+                @csrf
+                <x-primary-button>Checkout Items > </x-primary-button>
+            </form>
         </div>
         <hr class="mt-0 mb-3 border-slate-200 dark:border-slate-700">
         {{-- Item Grid --}}
@@ -26,8 +29,12 @@
             @else
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                     @foreach ($items as $item)
-                        <button wire:click="addToCart({{ $item->id }})" @disabled($item->stock === 0)
-                            class="group relative flex flex-col items-center bg-white dark:bg-slate-800 rounded shadow hover:bg-slate-50 dark:bg-hover-slate-900 active:scale-95
+                        <button @disabled($item->stock === 0) x-data="{
+                            id: {{ (int) $item->id }},
+                            isSelected: {{ isset(session('cart')[$item->id]) ? 'true' : 'false' }}
+                        }"
+                            @click=" isSelected = !isSelected; axios.post( '{{ route('pos.toggle.item') }}', { id: Number(id) }); "
+                            class="item-btn group relative flex flex-col items-center bg-white dark:bg-slate-800 rounded shadow hover:bg-slate-50 dark:bg-hover-slate-900 active:scale-95
                                transition-all duration-150 p-3 text-left disabled:opacity-40 disabled:cursor-default">
                             {{-- Out of stock badge --}}
                             <p class="w-full text-xs font-semibold tracking-wide text-slate-800 dark:text-slate-100">

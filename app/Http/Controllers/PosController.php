@@ -41,4 +41,36 @@ class PosController extends Controller
         $items = $this->getItems($request);
         return view('pos', compact('items'));
     }
+    public function toggleItem(Request $request)
+    {
+        $request->validate([
+            'id' => 'integer|required',
+        ]);
+
+        $cart = session()->get('cart', []);
+        $id = $request->id;
+
+        if (isset($cart[$id])) {
+            unset($cart[$id]);
+        } else {
+            // Store ID and basic info so you don't have to query the DB again later
+            $cart[$id] = true;
+        }
+
+        session()->put('cart', $cart);
+        return response()->json(['status' => 'success', 'count' => count($cart)]);
+    }
+
+    public function checkout(Request $request)
+    {
+        // Retrieve the cart from the session or database
+        $cart = session()->get('cart', []);
+
+        // Dump and die to see the data in your Network Tab
+        dd([
+            'message' => 'Checkout triggered successfully',
+            'cart_contents' => $cart,
+            'total_items' => count($cart),
+        ]);
+    }
 }
