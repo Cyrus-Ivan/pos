@@ -13,7 +13,7 @@
         <label for="{{ $id ?? 'simple-search' }}" class="sr-only">Search</label>
         <div class="relative w-auto flex">
             <input type="text" name="search" value="{{ request('search') }}" id="{{ $id }}" autocomplete="off"
-                class="shadow bg-slate-100 border border-slate-300 text-slate-900 text-sm rounded-none rounded-l-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:w-64 p-2 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
+                class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-none rounded-l-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:w-64 p-2 dark:bg-slate-900 shadow dark:border-slate-600 dark:placeholder-slate-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
                 placeholder="Search">
             <button type="submit"
                 class="p-2 text-sm font-medium text-white bg-indigo-600 rounded-r-lg border border-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800">
