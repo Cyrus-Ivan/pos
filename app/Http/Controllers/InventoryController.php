@@ -37,7 +37,7 @@ class InventoryController extends Controller
                 $query->where('branch_id', $request->input('branch') ? $request->input('branch') : env('BRANCH_ID'));
             },
         ])
-            ->paginate($request->input('per_page', 50))
+            ->paginate($request->input('per_page', 10))
             ->through(function ($item) use ($request) {
                 if ($request->filled('branch')) {
                     $item->stock = $item->inventories->first()?->stock ?? 0;
