@@ -9,7 +9,7 @@
                 class="w-24 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-1.5 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500"
                 onchange="window.location.href='{{ request()->fullUrlWithoutQuery(['page']) }}' + (window.location.href.includes('?') ? '&' : '?') + 'per_page=' + this.value">
                 @foreach ($perPageOptions as $option)
-                    <option value="{{ $option }}" {{ request('per_page', 10) == $option ? 'selected' : '' }}>
+                    <option value="{{ $option }}" {{ request('per_page', 50) == $option ? 'selected' : '' }}>
                         {{ $option }}
                     </option>
                 @endforeach
