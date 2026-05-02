@@ -49,8 +49,8 @@ class InventoryController extends Controller
     public function index(Request $request): View
     {
         $request->validate([
-            'search' => ['nullable', 'string', 'max:255'],
-            'branch' => ['nullable', 'exists:branches,id'],
+            'search' => 'nullable|string|max:255',
+            'branch' => 'nullable|exists:branches,id',
         ]);
 
         if (!$request->filled('branch')) {
