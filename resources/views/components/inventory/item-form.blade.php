@@ -47,7 +47,7 @@
                     <x-input-label for="sku" :value="__('SKU')" />
                     <x-text-input id="sku" class="block mt-1 w-full" name="sku" required autofocus
                         x-bind:value="item?.sku || ''" x-bind:disabled="isEdit"
-                        x-bind:class="{ 'pointer-events-none !cursor-default bg-gray-50 dark:bg-gray-800 text-gray-500': isEdit }" />
+                        x-bind:class="{ 'pointer-events-none !cursor-default bg-slate-50 dark:bg-slate-800 text-slate-500': isEdit }" />
                 </div>
 
                 {{-- Item Name --}}
@@ -55,7 +55,7 @@
                     <x-input-label for="name" :value="__('Item Name')" />
                     <x-text-input id="name" class="block mt-1 w-full" name="name" required
                         x-bind:value="item?.name || ''" x-bind:disabled="isEdit"
-                        x-bind:class="{ 'pointer-events-none !cursor-default bg-gray-50 dark:bg-gray-800 text-gray-500': isEdit }" />
+                        x-bind:class="{ 'pointer-events-none !cursor-default bg-slate-50 dark:bg-slate-800 text-slate-500': isEdit }" />
                 </div>
 
                 {{-- Item Cost & Selling Price (Side by Side) --}}
@@ -64,7 +64,7 @@
                         <x-input-label for="item-cost" :value="__('Item Cost')" />
                         <div class="relative mt-1">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500 dark:text-gray-400 sm:text-sm">₱</span>
+                                <span class="text-slate-500 dark:text-slate-400 sm:text-sm">₱</span>
                             </div>
                             <x-text-input id="item-cost" type="number" step="0.01" class="block w-full pl-8"
                                 name="item-cost" required x-bind:value="item?.cost || ''" />
@@ -75,7 +75,7 @@
                         <x-input-label for="selling-price" :value="__('Selling Price')" />
                         <div class="relative mt-1">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500 dark:text-gray-400 sm:text-sm">₱</span>
+                                <span class="text-slate-500 dark:text-slate-400 sm:text-sm">₱</span>
                             </div>
                             <x-text-input id="selling-price" type="number" step="0.01" class="block w-full pl-8"
                                 name="selling-price" required x-bind:value="item?.selling_price || ''" />
@@ -88,7 +88,7 @@
                     <x-input-label :value="__('Stocks per Branch')" class="mb-2" />
 
                     <div
-                        class="max-h-60 overflow-y-auto border border-gray-300 dark:border-gray-700 rounded-md p-3 space-y-3 bg-gray-50 dark:bg-gray-900/50">
+                        class="max-h-60 overflow-y-auto border border-slate-300 dark:border-slate-700 rounded-md p-3 space-y-3 bg-slate-50 dark:bg-slate-900/50">
                         @foreach ($branches as $branch)
                             <div x-data="{
                                 mode: 'add',
@@ -116,14 +116,14 @@
                                     this.inputValue = 0;
                                 }
                             }"
-                                class="flex items-center justify-between gap-4 bg-white dark:bg-gray-800 p-2 rounded-md shadow-sm border border-gray-100 dark:border-gray-700">
+                                class="flex items-center justify-between gap-4 bg-white dark:bg-slate-800 p-2 rounded-md shadow-sm border border-slate-100 dark:border-slate-700">
                                 {{-- Left: Branch Name & Current Stock in Edit --}}
                                 <div class="flex-1 flex flex-col">
-                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">
                                         {{ $branch->name }}
                                     </span>
                                     <template x-if="isEdit">
-                                        <span class="text-xs text-gray-500">Current: <span
+                                        <span class="text-xs text-slate-500">Current: <span
                                                 x-text="currentStock"></span></span>
                                     </template>
                                 </div>
@@ -131,20 +131,20 @@
                                 {{-- Middle: Toggle (Only in Edit Mode) --}}
                                 <template x-if="isEdit">
                                     <div
-                                        class="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-md text-xs">
+                                        class="flex items-center gap-1 bg-slate-100 dark:bg-slate-700 p-1 rounded-md text-xs">
                                         <input type="hidden" name="stock_mode[{{ $branch->id }}]"
                                             x-bind:value="mode">
                                         <button type="button" @click="mode = 'add'"
                                             :class="mode === 'add' ?
-                                                'bg-white dark:bg-gray-600 shadow-sm text-blue-600 dark:text-blue-400 font-medium' :
-                                                'text-gray-500 hover:text-gray-700 dark:hover:text-gray-500/50'"
+                                                'bg-white dark:bg-slate-600 shadow-sm text-blue-600 dark:text-blue-400 font-medium' :
+                                                'text-slate-500 hover:text-slate-700 dark:hover:text-slate-500/50'"
                                             class="px-2 py-1 rounded transition-colors duration-150">
                                             Add
                                         </button>
                                         <button type="button" @click="mode = 'set'"
                                             :class="mode === 'set' ?
-                                                'bg-white dark:bg-gray-600 shadow-sm text-blue-600 dark:text-blue-400 font-medium' :
-                                                'text-gray-500 hover:text-gray-700 dark:hover:text-gray-500/50'"
+                                                'bg-white dark:bg-slate-600 shadow-sm text-blue-600 dark:text-blue-400 font-medium' :
+                                                'text-slate-500 hover:text-slate-700 dark:hover:text-slate-500/50'"
                                             class="px-2 py-1 rounded transition-colors duration-150">
                                             Change
                                         </button>

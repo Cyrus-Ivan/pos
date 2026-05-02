@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+<nav x-data="{ open: false }" class="bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-700">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -7,7 +7,7 @@
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('pos') }}" class="flex items-center justify-center">
                         <x-application-logo
-                            class="h-9 w-auto flex items-center fill-current text-gray-800 dark:text-gray-200" />
+                            class="h-9 w-auto flex items-center fill-current text-slate-800 dark:text-slate-200" />
                     </a>
                 </div>
 
@@ -18,15 +18,15 @@
             <!-- Settings Dropdown -->
             <div class="hidden md:flex md:items-center md:ms-6">
                 <!-- Current Branch Display -->
-                <div class=" md:items-center text-sm text-gray-500 dark:text-gray-400 font-medium">
-                    <span class="mr-4 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-md">
+                <div class=" md:items-center text-sm text-slate-500 dark:text-slate-400 font-medium">
+                    <span class="tracking-wide mr-4 px-3 py-1 bg-white dark:bg-slate-800 shadow rounded-md">
                         {{ \App\Models\Branch::find(env('BRANCH_ID'))->name }}
                     </span>
                 </div>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                            class=" tracking-wide inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
 
                             <div class="ms-1">
@@ -102,7 +102,7 @@
             <!-- Hamburger -->
             <div class="-me-2 flex items-center md:hidden">
                 <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
+                    class="inline-flex items-center justify-center p-2 rounded-md hover:text-slate-900 dark:hover:text-slate-50 text-slate-500 text-slate-400 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -122,21 +122,21 @@
         <x-nav-links view='mobile' />
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+        <div class="pt-4 pb-1 border-t border-slate-200 dark:border-slate-600">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-base text-slate-800 dark:text-slate-200">{{ Auth::user()->name }}</div>
+                <div class="font-medium tracking-wide text-sm text-slate-500">{{ Auth::user()->email }}</div>
                 <!-- Current Branch Display -->
-                <div class="font-medium text-sm text-gray-500">
+                <div class="tracking-wide font-medium text-sm text-slate-500">
                     {{ \App\Models\Branch::find(env('BRANCH_ID'))->name }}
                 </div>
             </div>
 
-            <div class="mt-3 text-gray-500 dark:text-gray-400 space-y-1">
+            <div class="mt-3 text-slate-500 dark:text-slate-400 space-y-1">
                 <!-- Theme Toggle Mobile -->
                 <button type="button"
                     onclick="document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light')"
-                    class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:text-gray-800 dark:focus:text-gray-200 focus:bg-gray-50 dark:focus:bg-gray-700 focus:border-gray-300 dark:focus:border-gray-600 transition duration-150 ease-in-out">
+                    class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:text-slate-800 dark:focus:text-slate-200 focus:bg-slate-50 dark:focus:bg-slate-700 focus:border-slate-300 dark:focus:border-slate-600 transition duration-150 ease-in-out">
                     <div class="flex items-center">
                         <!-- Moon icon for light mode -->
                         <svg class="w-5 h-5 mr-3 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"
@@ -157,7 +157,7 @@
 
                 <x-responsive-nav-link view="mobile" :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
                     <div class="flex items-center">
-                        <svg class="w-5 h-5 mr-3 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
+                        <svg class="w-5 h-5 mr-3 text-slate-500" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
                                 clip-rule="evenodd"></path>
@@ -173,7 +173,7 @@
                         onclick="event.preventDefault();
                                         this.closest('form').submit();">
                         <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor"
+                            <svg class="w-5 h-5 mr-3 text-slate-500" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">

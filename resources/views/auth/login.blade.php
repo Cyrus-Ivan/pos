@@ -18,21 +18,23 @@
             <x-input-label for="password" :value="__('Password')" />
             <div class="relative">
                 <x-text-input id="password" class="block mt-1 w-full pr-10" x-bind:type="show ? 'text' : 'password'"
-                    type="password" name="password" required  />
+                    type="password" name="password" required />
 
                 <button type="button" @mousedown="show = true" @mouseup="show = false" @mouseleave="show = false"
                     @touchstart="show = true" @touchend="show = false"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 focus:outline-none">
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 focus:outline-none">
                     <!-- Eye Icon (hidden when show=true) -->
-                    <svg x-show="!show" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg x-show="!show" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        class="h-5 w-5 transition-colors duration-200 text-slate-400 dark:text-slate-500">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                     <!-- Eye Slash Icon (shown when show=true) -->
-                    <svg x-show="show" x-cloak style="display: none;" class="h-5 w-5" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
+                    <svg x-show="show" x-cloak style="display: none;"
+                        class="h-5 w-5 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.05 10.05 0 011.52-3.41M5.636 5.636a9.965 9.965 0 016.364-2.636c4.478 0 8.268 2.943 9.542 7a10.05 10.05 0 01-2.012 3.659M15 12a3 3 0 01-2.908 3.997M12 9.003a3 3 0 00-3.997 2.908M3 3l18 18" />
                     </svg>
@@ -60,9 +62,16 @@
             <input type="hidden" name="taken_at" :value="timestamp">
 
             <x-primary-button type="button" @click="toggleCapture" x-bind:disabled="cameraError !== null"
-                class="w-full mt-4 justify-center"
+                class="w-full mt-4 justify-center gap-2"
                 x-bind:class="{ 'opacity-50 cursor-not-allowed': cameraError !== null }">
-                <span x-text="isCaptured ? 'Recapture' : 'Capture Photo'"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                    <circle cx="12" cy="13" r="3" />
+                </svg>
+
+                <span x-text="isCaptured ? ' Recapture' : ' Capture Photo'"></span>
             </x-primary-button>
 
             <x-input-error :messages="['⚠ A photo is required to login.']" x-show="showPhotoError" x-cloak style="display: none;" class="mt-3"
@@ -73,15 +82,15 @@
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox"
-                    class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 shadow-sm"
+                    class="rounded bg-slate-100 dark:bg-slate-950 border dark:border-slate-500 border-slate-600 text-indigo-600 shadow-sm"
                     name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
+                <span class="ms-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Remember me') }}</span>
             </label>
         </div>
 
         <div class="flex items-center justify-end mt-4">
             <x-primary-button class="ms-3" id="loginBtn">
-                {{ __('Log in') }}
+                {{ __('LOG IN') }}
             </x-primary-button>
         </div>
     </form>

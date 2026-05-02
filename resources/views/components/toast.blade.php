@@ -127,7 +127,7 @@
                         error: 'bg-red-50    border-red-200   text-red-800    dark:bg-red-900/40    dark:border-red-700   dark:text-red-300',
                         warning: 'bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/40 dark:border-yellow-700 dark:text-yellow-300',
                         info: 'bg-blue-50   border-blue-200  text-blue-800   dark:bg-blue-900/40   dark:border-blue-700  dark:text-blue-300',
-                    } [type] ?? 'bg-gray-50 border-gray-200 text-gray-800';
+                    } [type] ?? 'bg-slate-50 border-slate-200 text-slate-800';
                 },
 
                 progressColor(type) {
@@ -136,7 +136,7 @@
                         error: 'bg-red-500',
                         warning: 'bg-yellow-500',
                         info: 'bg-blue-500',
-                    } [type] ?? 'bg-gray-400';
+                    } [type] ?? 'bg-slate-400';
                 },
 
                 icon(type) {

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-slate-800 dark:text-slate-200 leading-tight">
             {{ __('Inventory') }}
         </h2>
     </x-slot>
@@ -12,7 +12,7 @@
             <form method="GET" class="flex gap-2">
                 <x-search-bar id="search-item" />
                 <select name="branch" id="inventory_id" onchange="this.form.submit()"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-36 p-2 pr-8 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500">
+                    class="bg-slate-100 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-36 p-2 pr-8 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500">
                     @foreach ($branches as $branch)
                         <option value="{{ $branch->id }}" {{ request('branch') == $branch->id ? 'selected' : '' }}>
                             {{ $branch->name }}
@@ -60,7 +60,7 @@
                     </x-responsive-table-data>
 
                     <x-responsive-table-data
-                        class="px-6 py-4 mb-2 md:m-0 w-full md:w-[20rem] whitespace-nowrap md:table-cell text-gray-700 dark:text-white order-first md:order-none border-b md:border-none">
+                        class="px-6 py-4 mb-2 md:m-0 w-full md:w-[20rem] whitespace-nowrap md:table-cell text-slate-700 dark:text-white order-first md:order-none border-b md:border-none">
                         {{ $item->name }}
                     </x-responsive-table-data>
 

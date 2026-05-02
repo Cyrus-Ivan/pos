@@ -68,20 +68,20 @@
         @if ($title) aria-labelledby="modal-title-{{ $id }}" @endif
         @if ($dismissible) x-on:click.self="open = false; resetInputs()" @endif x-cloak>
         <div
-            class="relative w-full {{ $sizeClass }} bg-white dark:bg-gray-800 rounded-xl shadow-xl flex flex-col max-h-[90vh]">
+            class="relative w-full {{ $sizeClass }} bg-white dark:bg-slate-800 rounded-xl shadow-xl flex flex-col max-h-[90vh]">
 
             {{-- Header (only renders if title is provided) --}}
             @if ($title)
                 <div
-                    class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 shrink-0">
+                    class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700 shrink-0">
                     <h2 id="modal-title-{{ $id }}"
-                        class="text-base font-semibold text-gray-800 dark:text-gray-200">
+                        class="text-base font-semibold text-slate-800 dark:text-slate-200">
                         {{ $title }}
                     </h2>
 
                     @if ($dismissible)
                         <button type="button" x-on:click="open = false; resetInputs()"
-                            class="p-1 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            class="p-1 rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                             aria-label="Close modal">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                 class="w-5 h-5">
@@ -101,7 +101,7 @@
             {{-- Footer (only renders if the footer slot is used) --}}
             @isset($footer)
                 <div
-                    class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 rounded-b-xl flex items-center justify-end gap-3 shrink-0">
+                    class="px-6 py-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 rounded-b-xl flex items-center justify-end gap-3 shrink-0">
                     {{ $footer }}
                 </div>
             @endisset

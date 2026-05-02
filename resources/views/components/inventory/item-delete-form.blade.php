@@ -31,8 +31,8 @@
             <input type="hidden" name="id" x-bind:value="item?.id">
 
             <div class="space-y-4">
-                <p class="text-sm text-gray-600 dark:text-gray-400">
-                    Are you sure you want to delete <span class="font-semibold text-gray-800 dark:text-gray-200"
+                <p class="text-sm text-slate-600 dark:text-slate-400">
+                    Are you sure you want to delete <span class="font-semibold text-slate-800 dark:text-slate-200"
                         x-text="item?.name"></span>?
                     This action cannot be undone. To continue, type <strong>confirm</strong> below:
                 </p>

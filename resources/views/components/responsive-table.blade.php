@@ -34,11 +34,12 @@
 <div x-data="{ isMobile: window.innerWidth < 768 }" x-on:resize.window.debounce.150ms="isMobile = window.innerWidth < 768" x-cloak
     {{ $attributes->merge(['class' => 'w-full flex flex-col min-h-0']) }}>
 
-    <div class="w-full bg-white dark:bg-gray-800 md:rounded-lg flex flex-col min-h-0 overflow-y-auto overflow-x-auto">
-        <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
+    <div
+        class="shadow w-full bg-white dark:bg-slate-800 md:rounded-lg flex flex-col min-h-0 overflow-y-auto overflow-x-auto">
+        <table class="w-full table-fixed text-sm text-left text-slate-500 dark:text-slate-400">
             @isset($columns)
                 <thead
-                    class="hidden md:table-header-group sticky top-0 z-10 text-xs text-gray-700 uppercase bg-gray-200 dark:dark:border-gray-700 dark:bg-gray-700 dark:text-gray-400 shadow-sm border-b border-gray-200 dark:border-gray-700">
+                    class="hidden md:table-header-group sticky top-0 z-10 text-xs text-white uppercase dark:dark:border-slate-700 bg-indigo-600 border-b border-slate-200 dark:border-slate-700">
                     <tr>
                         @foreach ($columns as $column)
                             <th scope="col" id="{{ $column['key'] }}" class="{{ $column['class'] }}">
@@ -49,12 +50,12 @@
                 </thead>
             @endisset
 
-            <tbody x-ref="tableBody" class="md:table-row-group divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody x-ref="tableBody" class="md:table-row-group divide-y divide-slate-200 dark:divide-slate-700">
                 {{ $slot }}
 
             </tbody>
             <tr x-ref="noRecord" id="no-record-message" style="{{ $slot->isEmpty() ? '' : 'display: none;' }}"
-                class="flex flex-col md:table-row m-3 bg-gray-100/50 dark:bg-gray-700/50 hover:bg-gray-200/50 dark:hover:bg-gray-600/50 transition-colors">
+                class="flex flex-col md:table-row m-3 bg-slate-100/50 dark:bg-slate-700/50 hover:bg-slate-200/50 dark:hover:bg-slate-600/50 transition-colors">
                 <td colspan="{{ count($columns) }}" class="text-center py-9">No matching records found.
                 </td>
             </tr>

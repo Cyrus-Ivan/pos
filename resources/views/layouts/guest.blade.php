@@ -26,11 +26,11 @@
     </script>
 </head>
 
-<body class="font-sans text-gray-900 antialiased">
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-        <x-application-logo class="text-gray-300 font-bold text-4xl sm:text-4xl md:text-4xl text-center" />
+<body class="font-sans antialiased">
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-slate-100 dark:bg-slate-950">
+        <x-application-logo :has-name="true" />
         <div
-            class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
+            class="w-full sm:max-w-md mt-6 px-6 py-4 bg-slate-50 dark:bg-slate-900 shadow-md overflow-hidden sm:rounded-lg">
             {{ $slot }}
         </div>
     </div>
