@@ -19,7 +19,7 @@ class InventoryFactory extends Factory
         return [
             'item_id' => \App\Models\Item::factory(),
             'branch_id' => \App\Models\Branch::inRandomOrder()->first()?->id ?? 1,
-            'stock' => $this->faker->numberBetween(0, 500),
+            'stock' => $this->faker->numberBetween(0, 20),
         ];
     }
 }
