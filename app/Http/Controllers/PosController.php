@@ -29,7 +29,7 @@ class PosController extends Controller
                 $query->where('branch_id', env('BRANCH_ID'));
             },
         ])
-            ->paginate($request->input('per_page', 10))
+            ->paginate($request->input('per_page', 50))
             ->through(function ($item) use ($request) {
                 $item->stock = $item->inventories->first()?->stock ?? 0;
 
