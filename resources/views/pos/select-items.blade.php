@@ -10,10 +10,10 @@
             <form method="GET">
                 <x-search-bar />
             </form>
-            <form method="POST" action="{{ route('pos.checkout') }}">
-                @csrf
-                <x-primary-button>Checkout Items > </x-primary-button>
-            </form>
+            <x-primary-button onclick="window.location.href='{{ route('pos.confirm.checkout') }}'">
+                Checkout Items &gt;
+            </x-primary-button>
+
         </div>
         <hr class="mt-0 mb-3 border-slate-200 dark:border-slate-700">
         {{-- Item Grid --}}
@@ -31,7 +31,7 @@
                     @foreach ($items as $item)
                         <button @disabled($item->stock === 0) x-data="{
                             id: {{ (int) $item->id }},
-                            isSelected: {{ isset(session('cart')[$item->id]) ? 'true' : 'false' }}
+                            isSelected: {{ isset(session('selectedItems')[$item->id]) ? 'true' : 'false' }}
                         }"
                             @click=" isSelected = !isSelected; axios.post( '{{ route('pos.toggle.item') }}', { id: Number(id) }); "
                             x-bind:class="isSelected ? 'ring ring-indigo-500' :

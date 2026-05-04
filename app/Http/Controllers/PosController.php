@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 class PosController extends Controller
 {
+
     private function getItems(Request $request)
     {
         $query = Item::query()
@@ -39,7 +40,7 @@ class PosController extends Controller
     public function index(Request $request): View
     {
         $items = $this->getItems($request);
-        return view('pos', compact('items'));
+        return view('pos.select-items', compact('items'));
     }
     public function toggleItem(Request $request)
     {
@@ -47,30 +48,26 @@ class PosController extends Controller
             'id' => 'integer|required',
         ]);
 
-        $cart = session()->get('cart', []);
+        $selectedItems = session()->get('selectedItems', []);
         $id = $request->id;
 
-        if (isset($cart[$id])) {
-            unset($cart[$id]);
+        if (isset($selectedItems[$id])) {
+            unset($selectedItems[$id]);
         } else {
             // Store ID and basic info so you don't have to query the DB again later
-            $cart[$id] = true;
+            $selectedItems[$id] = true;
         }
 
-        session()->put('cart', $cart);
-        return response()->json(['status' => 'success', 'count' => count($cart)]);
+        session()->put('selectedItems', $selectedItems);
+        return response()->json(['status' => 'success', 'count' => count($selectedItems)]);
     }
 
-    public function checkout(Request $request)
+    public function confirmCheckoutView(Request $request)
     {
-        // Retrieve the cart from the session or database
-        $cart = session()->get('cart', []);
+        $selectedItems = Item::whereIn('id', array_keys(session('selectedItems', [])))->get()->each(function ($item) {
+            $item->stock = $item->inventories->first()?->stock ?? 0;
+        });
 
-        // Dump and die to see the data in your Network Tab
-        dd([
-            'message' => 'Checkout triggered successfully',
-            'cart_contents' => $cart,
-            'total_items' => count($cart),
-        ]);
+        return view('pos.confirm-checkout', compact('selectedItems'));
     }
 }
