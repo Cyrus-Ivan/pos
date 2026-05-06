@@ -10,15 +10,20 @@ class Branch extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['id', 'code', 'name', 'address'];
+    protected $fillable = ['id', 'name', 'address'];
 
     public function loginAudits()
     {
-        return $this->hasMany(LoginAudit::class);
+        return $this->hasMany(LoginAudit::class, 'branch_id', 'id');
     }
 
     public function inventories()
     {
         return $this->hasMany(Inventory::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

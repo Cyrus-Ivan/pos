@@ -13,7 +13,8 @@ return new class extends Migration {
         Schema::create('transaction_items', function (Blueprint $table) {
             $table->foreignUuid('transaction_id')
                 ->references('id')
-                ->on('transactions');
+                ->on('transactions')
+                ->constrained();
 
             $table->foreignId('item_id')
                 ->references('id')

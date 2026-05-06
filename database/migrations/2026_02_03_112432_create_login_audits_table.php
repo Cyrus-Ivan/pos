@@ -20,7 +20,8 @@ return new class extends Migration {
             $table->string('branch_id');
             $table->foreign('branch_id')
                 ->references('id')
-                ->on('branches')->constrained();
+                ->on('branches')
+                ->constrained();
 
             $table->string('photo_path')->nullable();
             $table->timestamp('photo_taken_at')->nullable(); // when photo was taken
