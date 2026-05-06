@@ -15,21 +15,18 @@ return new class extends Migration {
 
             $table->foreignId('user_id')
                 ->references('id')
-                ->on('users');
+                ->on('users')->index();
 
             $table->string('branch_id');
             $table->foreign('branch_id')
                 ->references('id')
-                ->on('branches');
+                ->on('branches')->index();
 
             $table->string('photo_path')->nullable();
             $table->timestamp('photo_taken_at')->nullable(); // when photo was taken
             $table->enum('type', ['in', 'out']);
 
-            $table->timestamps(); // record stored time 
-            $table->index(['user_id', 'photo_taken_at', 'photo_path']);
-            $table->index(['branch_id']);
-
+            $table->timestamps()->index(); // record stored time 
         });
     }
 
