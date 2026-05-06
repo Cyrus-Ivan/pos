@@ -14,10 +14,10 @@ return new class extends Migration {
             // Using UUID for local-first sync safety
             $table->uuid('id')->primary();
 
-            $table->foreignId('branch_id')
+            $table->string('branch_id');
+            $table->foreign('branch_id')
                 ->references('id')
-                ->on('branches')
-                ->index();
+                ->on('branches')->constrained();
 
             $table->foreignId('user_id')
                 ->references('id')
@@ -25,6 +25,8 @@ return new class extends Migration {
 
             // Cached total for quick history views
             $table->decimal('total_amount', 15, 2)->default(0);
+            $table->text('notes')->nullable();
+            $table->enum('payment_type', ['cash', 'online']);
 
             $table->timestamps();
         });

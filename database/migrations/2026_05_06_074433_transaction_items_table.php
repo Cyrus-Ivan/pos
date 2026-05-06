@@ -12,10 +12,13 @@ return new class extends Migration {
     {
         Schema::create('transaction_items', function (Blueprint $table) {
             $table->foreignUuid('transaction_id')
-                ->references('transactions')
-                ->on('id');
+                ->references('id')
+                ->on('transactions');
 
-            $table->foreignId('item_id')->index();
+            $table->foreignId('item_id')
+                ->references('id')
+                ->on('items')
+                ->constrained();
 
             // Financial data at the time of sale
             $table->integer('quantity'); // Can be negative for cancelled/refund
@@ -25,7 +28,6 @@ return new class extends Migration {
 
             // cancelled = item was returned sealed , refund = item was damaged/broken
             $table->enum('type', ['sale', 'cancelled', 'refund'])->default('sale')->index();
-            $table->text('notes')->nullable();
 
             $table->timestamps();
             $table->primary(['transaction_id', 'item_id', 'type']);
