@@ -10,7 +10,7 @@
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" name="email" :value="old('email')" required autofocus
-                autocomplete="one-time-code" />
+                autocomplete="one-time-code" readonly onfocus="this.removeAttribute('readonly');" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -18,8 +18,9 @@
         <div class="mt-4" x-data="{ show: false }">
             <x-input-label for="password" :value="__('Password')" />
             <div class="relative">
-                <x-text-input id="password" class="block mt-1 w-full pr-10" x-bind:type="show ? 'text' : 'password'"
-                    type="password" name="password" autocomplete="new-password" required />
+                <x-text-input readonly onfocus="this.removeAttribute('readonly');" id="password"
+                    class="block mt-1 w-full pr-10" x-bind:type="show ? 'text' : 'password'" type="password"
+                    name="password" autocomplete="new-password" required />
 
                 <button type="button" @mousedown="show = true" @mouseup="show = false" @mouseleave="show = false"
                     @touchstart="show = true" @touchend="show = false"
