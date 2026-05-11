@@ -2,14 +2,15 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}" x-data="loginComponent()" @submit="submitForm($event)">
+    <form autocomplete="off" method="POST" action="{{ route('login') }}" x-data="loginComponent()"
+        @submit="submitForm($event)">
         @csrf
 
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" name="email" :value="old('email')" required autofocus
-                autocomplete="username" />
+                autocomplete="one-time-code" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -18,7 +19,7 @@
             <x-input-label for="password" :value="__('Password')" />
             <div class="relative">
                 <x-text-input id="password" class="block mt-1 w-full pr-10" x-bind:type="show ? 'text' : 'password'"
-                    type="password" name="password" required />
+                    type="password" name="password" autocomplete="new-password" required />
 
                 <button type="button" @mousedown="show = true" @mouseup="show = false" @mouseleave="show = false"
                     @touchstart="show = true" @touchend="show = false"
