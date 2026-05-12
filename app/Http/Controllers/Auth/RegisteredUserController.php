@@ -17,9 +17,22 @@ class RegisteredUserController extends Controller
     /**
      * Display the employees view.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('employees');
+        $query = User::query()
+            ->select(['id', 'name', 'email', 'role']);
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $employees = $query->paginate($request->input('per_page', 50))->withQueryString();
+
+        return view('employees', compact('employees'));
     }
 
     /**
