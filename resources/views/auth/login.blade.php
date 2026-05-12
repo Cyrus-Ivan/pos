@@ -9,7 +9,8 @@
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" name="email" :value="old('email')" required autofocus
-                autocomplete="username" />
+                autocomplete="username" autocomplete="one-time-code" readonly
+                onfocus="this.removeAttribute('readonly');" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -17,8 +18,9 @@
         <div class="mt-4" x-data="{ show: false }">
             <x-input-label for="password" :value="__('Password')" />
             <div class="relative">
-                <x-text-input id="password" class="block mt-1 w-full pr-10" x-bind:type="show ? 'text' : 'password'"
-                    type="password" name="password" required />
+                <x-text-input readonly onfocus="this.removeAttribute('readonly');" id="password"
+                    class="block mt-1 w-full pr-10" x-bind:type="show ? 'text' : 'password'" type="password"
+                    name="password" autocomplete="new-password" required />
 
                 <button type="button" @mousedown="show = true" @mouseup="show = false" @mouseleave="show = false"
                     @touchstart="show = true" @touchend="show = false"
@@ -76,16 +78,6 @@
 
             <x-input-error :messages="['⚠ A photo is required to login.']" x-show="showPhotoError" x-cloak style="display: none;" class="mt-3"
                 role="alert" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox"
-                    class="rounded bg-slate-100 dark:bg-slate-950 border dark:border-slate-500 border-slate-600 text-indigo-600 shadow-sm"
-                    name="remember">
-                <span class="ms-2 text-sm text-slate-600 dark:text-slate-400">{{ __('Remember me') }}</span>
-            </label>
         </div>
 
         <div class="flex items-center justify-end mt-4">
