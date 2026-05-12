@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
         // Enforce "taken now"
         if (abs(now()->timestamp - $request->taken_at) > 60) {
             throw ValidationException::withMessages([
-                'email' => 'Photo must be taken live'
+                'email' => 'Photo must be taken live',
             ]);
         }
 
@@ -58,7 +58,7 @@ class AuthenticatedSessionController extends Controller
             }
         }
 
-        $path = 'login_photos/' . uniqid() . '.jpg';
+        $path = 'login_photos/'.uniqid().'.jpg';
         Storage::disk('private')->put($path, $image);
 
         try {

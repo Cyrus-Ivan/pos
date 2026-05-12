@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transaction_Item extends Model
 {
     protected $table = 'transaction_items';
+
     protected $fillable = [
         'transaction_id',
         'item_id',

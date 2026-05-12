@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Branch;
-use App\Models\Inventory;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+
 class PosController extends Controller
 {
-
     private function getItems(Request $request)
     {
         $query = Item::query()
@@ -31,17 +29,20 @@ class PosController extends Controller
             },
         ])
             ->paginate($request->input('per_page', 50))
-            ->through(function ($item) use ($request) {
+            ->through(function ($item) {
                 $item->stock = $item->inventories->first()?->stock ?? 0;
 
                 return $item;
             })->withQueryString();
     }
+
     public function index(Request $request): View
     {
         $items = $this->getItems($request);
+
         return view('pos.select-items', compact('items'));
     }
+
     public function toggleItem(Request $request)
     {
         $request->validate([
@@ -59,6 +60,7 @@ class PosController extends Controller
         }
 
         session()->put('selectedItems', $selectedItems);
+
         return response()->json(['status' => 'success', 'count' => count($selectedItems)]);
     }
 

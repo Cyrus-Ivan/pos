@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,9 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('cashier', fn($user) => $user->role === 'cashier');
-        Gate::define('admin', fn($user) => $user->role === 'admin');
-        Gate::define('owner', fn($user) => $user->role === 'owner');
+        Gate::define('cashier', fn ($user) => $user->role === 'cashier');
+        Gate::define('admin', fn ($user) => $user->role === 'admin');
+        Gate::define('owner', fn ($user) => $user->role === 'owner');
         // for when it allows both owner and admin
         Gate::define('owner-admin', function ($user) {
             return in_array($user->role, ['owner', 'admin']);
