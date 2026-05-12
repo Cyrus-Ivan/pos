@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PosController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PosController::class, 'index'])->middleware(['auth'])->name('pos');
 
-Route::middleware(['auth',])->group(function () {
+Route::middleware(['auth'])->group(function () {
     // pos
     Route::post('/pos/add-item', [PosController::class, 'toggleItem'])->name('pos.toggle.item');
     Route::get('/pos/confirm-checkout', [PosController::class, 'confirmCheckoutView'])->name('pos.confirm.checkout');
@@ -16,7 +17,7 @@ Route::middleware(['auth',])->group(function () {
     Route::view('/sales', 'sales')->name('sales');
 
     // employees
-    Route::view('/employees', 'employees')->name('employees')->middleware('can:owner');
+    Route::get('/employees', [RegisteredUserController::class, 'index'])->name('employees')->middleware('can:owner-admin');
 
     // inventory
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory')->middleware('can:owner-admin');
@@ -30,4 +31,4 @@ Route::middleware(['auth',])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

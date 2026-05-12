@@ -15,6 +15,14 @@ use Illuminate\View\View;
 class RegisteredUserController extends Controller
 {
     /**
+     * Display the employees view.
+     */
+    public function index(): View
+    {
+        return view('employees');
+    }
+
+    /**
      * Display the registration view.
      */
     public function create(): View
