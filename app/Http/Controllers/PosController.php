@@ -144,6 +144,8 @@ class PosController extends Controller
             // Clear checkout cart
             $request->session()->forget('selectedItems');
 
+            session()->flash('success', 'Checkout successful!');
+
             // Dispatch response payload
             return response()->json([
                 'message' => 'Checkout processed successfully.',
