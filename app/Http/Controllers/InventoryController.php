@@ -42,6 +42,7 @@ class InventoryController extends Controller
                 if ($request->filled('branch')) {
                     $item->stock = $item->inventories->first()?->stock ?? 0;
                 }
+
                 return $item;
             })->withQueryString();
     }
@@ -53,7 +54,7 @@ class InventoryController extends Controller
             'branch' => 'nullable|exists:branches,id',
         ]);
 
-        if (!$request->filled('branch')) {
+        if (! $request->filled('branch')) {
             $request->merge(['branch' => env('BRANCH_ID')]);
         }
 
@@ -156,7 +157,7 @@ class InventoryController extends Controller
         });
 
         // 7. Return feedback corresponding to whether any data was realistically edited
-        if (!$changesMade) {
+        if (! $changesMade) {
             return redirect()->back()->with('info', 'No changes were made to the item.');
         }
 
@@ -167,7 +168,7 @@ class InventoryController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|exists:items,id',
-            'confirm' => 'required|in:confirm'
+            'confirm' => 'required|in:confirm',
         ]);
 
         $item = Item::findOrFail($validated['id']);
