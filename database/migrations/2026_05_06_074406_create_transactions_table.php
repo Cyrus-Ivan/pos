@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             // Using UUID for local-first sync safety
-            $table->uuid('id')->primary();
+            $table->ulid('id')->primary();
 
             $table->string('branch_id');
             $table->foreign('branch_id')

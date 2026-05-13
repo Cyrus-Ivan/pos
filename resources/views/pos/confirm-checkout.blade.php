@@ -15,6 +15,8 @@
         {{-- Wrapper: stacks vertically on mobile, side-by-side on md+ --}}
 
         <div class="flex flex-col md:flex-row gap-4 h-full min-h-0" x-data="{
+        
+            paymentType: 'cash',
             items: {
                 @foreach ($selectedItems as $item)
                 '{{ $item->id }}': { price: {{ $item->selling_price }}, quantity: 1, discount: 0 }, @endforeach
@@ -23,7 +25,25 @@
             get totalItemQuantity() { return Object.values(this.items).reduce((sum, item) => sum + item.quantity, 0); },
             get subtotal() { return Object.values(this.items).reduce((sum, item) => sum + (item.price * item.quantity), 0); },
             get totalDiscount() { return Object.values(this.items).reduce((sum, item) => sum + item.discount, 0); },
-            get grandTotal() { return Math.max(0, this.subtotal - this.totalDiscount); }
+            get grandTotal() { return Math.max(0, this.subtotal - this.totalDiscount); },
+        
+            async submitCheckout() {
+                try {
+                    const response = await axios.post('{{ route('pos.checkout') }}', {
+                        items: this.items,
+                        payment_type: this.paymentType,
+                        subtotal: this.subtotal,
+                        total_discount: this.totalDiscount,
+                        grand_total: this.grandTotal,
+                    });
+        
+                    // Re-route on successful checkout
+                    window.location.href = response.data.redirect_url;
+                } catch (error) {
+                    console.error('Failed to checkout:', error.response?.data?.message || error.message);
+                    alert(error.response?.data?.message || 'Checkout Error');
+                }
+            }
         }"
             @update-item.window="if(items[$event.detail.id]) { items[$event.detail.id].quantity = $event.detail.quantity; items[$event.detail.id].discount = $event.detail.discount; }"
             @remove-item.window="delete items[$event.detail.id]">
@@ -63,7 +83,7 @@
                         <span>Date</span>
                         <span class="font-medium text-slate-800 dark:text-slate-200">{{ now()->format('Y-m-d') }}</span>
                     </div>
-                    
+
                     <div class="flex justify-between ">
                         <span>Cashier</span>
                         <span class="font-medium text-slate-800 dark:text-slate-200">{{ auth()->user()->name }}</span>
@@ -100,19 +120,17 @@
                 {{-- Payment method (optional) --}}
                 <div class="space-y-1">
                     <label class="text-xs font-medium text-slate-500 dark:text-slate-400">Payment Method</label>
-                    <select
+                    <select x-model="paymentType"
                         class="w-full text-sm rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option>Cash</option>
-                        <option>Card</option>
-                        <option>GCash</option>
+                        <option value="cash">Cash</option>
+                        <option value="online">Online</option>
                     </select>
                 </div>
 
                 {{-- Complete Purchase Button --}}
-                <button type="submit"
-                    class="w-full mt-1 bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all duration-150 text-white font-semibold text-sm py-3 rounded-xl shadow-md">
+                <x-primary-button type="button" @click="submitCheckout()">
                     Complete Purchase
-                </button>
+                </x-primary-button>
             </div>
 
         </div>

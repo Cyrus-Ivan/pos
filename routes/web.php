@@ -12,6 +12,7 @@ Route::middleware(['auth'])->group(function () {
     // pos
     Route::post('/pos/add-item', [PosController::class, 'toggleItem'])->name('pos.toggle.item');
     Route::get('/pos/confirm-checkout', [PosController::class, 'confirmCheckoutView'])->name('pos.confirm.checkout');
+    Route::post('/pos/checkout', [PosController::class, 'checkout'])->name('pos.checkout');
 
     // sales
     Route::view('/sales', 'sales')->name('sales');
@@ -31,4 +32,4 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
