@@ -79,7 +79,17 @@
                     <x-responsive-table-data
                         class="px-6 py-2 md:py-4 w-full md:w-28 text-left whitespace-nowrap md:table-cell md:text-right"
                         column-name="Stock">
-                        {{ $item->stock }}
+                        <span @class([
+                            'font-semibold',
+                            'text-red-600 dark:text-red-500' => $item->stock == 0,
+                            'text-orange-500 dark:text-orange-400' =>
+                                $item->stock > 0 && $item->stock < 5,
+                            'text-yellow-500 dark:text-yellow-400' =>
+                                $item->stock >= 5 && $item->stock < 10,
+                            'text-green-600 dark:text-green-500' => $item->stock >= 10,
+                        ])>
+                            {{ $item->stock }}
+                        </span>
                     </x-responsive-table-data>
 
                     <x-responsive-table-data
