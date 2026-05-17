@@ -106,6 +106,12 @@ class PosController extends Controller
                 $quantity = $details['quantity'];
                 $discount = $details['discount'] ?? 0;
 
+                if ($discount > ($price * $quantity)) {
+                    throw ValidationException::withMessages([
+                        "items" => "Discount cannot exceed total price for item id {$itemId}!"
+                    ]);
+                }
+
                 $rowSubtotal = ($price * $quantity) - $discount;
                 $totalAmount += $rowSubtotal;
 
