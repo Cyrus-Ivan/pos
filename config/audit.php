@@ -169,6 +169,10 @@ return [
         ],
     ],
 
+
+    // Tell laravel-auditing to use UUIDs
+    'audit_model' => App\Models\Audit::class,
+
     /*
     |--------------------------------------------------------------------------
     | Audit Queue Configurations
