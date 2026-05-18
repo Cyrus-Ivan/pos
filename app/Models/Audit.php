@@ -2,16 +2,20 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Syncable;
+
 use OwenIt\Auditing\Models\Audit as AuditBase;
 
 class Audit extends AuditBase
 {
-    protected static function booting()
+    use Syncable;
+
+    protected static function boot()
     {
-        parent::booting();
+        parent::boot();
 
         static::creating(function ($audit) {
-            $audit->branch_id = env('BRANCH_ID'); // or however you store the current branch
+            $audit->branch_id = auth()->user()?->branch_id ?? env('BRANCH_ID'); // Ensure it falls back safely
         });
     }
 }

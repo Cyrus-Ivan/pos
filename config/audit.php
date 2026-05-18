@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'implementation' => OwenIt\Auditing\Models\Audit::class,
+    'implementation' => env('AUDIT_IMPLEMENTATION', \App\Models\Audit::class),
 
     /*
     |--------------------------------------------------------------------------

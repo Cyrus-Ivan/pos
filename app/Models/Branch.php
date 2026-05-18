@@ -2,15 +2,20 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Syncable;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Branch extends Model
 {
+    use Syncable;
+
     public $incrementing = false;
 
     protected $keyType = 'string';
 
-    protected $fillable = ['id', 'name', 'address'];
+    protected $fillable = [
+        'synced_at','id', 'name', 'address'];
 
     public function loginAudits()
     {

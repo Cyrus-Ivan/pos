@@ -2,14 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Syncable;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transaction_Item extends Model
 {
+    use Syncable;
+
     protected $table = 'transaction_items';
 
     protected $fillable = [
+        'synced_at',
         'transaction_id',
         'item_id',
         'quantity',

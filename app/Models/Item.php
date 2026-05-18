@@ -2,16 +2,21 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Syncable;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Item extends Model
 {
+    use Syncable;
+
     /** @use HasFactory<\Database\Factories\ItemFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'synced_at',
         'sku',
         'name',
         'cost',

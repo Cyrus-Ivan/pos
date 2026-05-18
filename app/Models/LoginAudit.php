@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Syncable;
+
 use Illuminate\Database\Eloquent\Model;
 
 class LoginAudit extends Model
 {
+    use Syncable;
+
     protected $fillable = [
+        'synced_at',
         'branch_id',
         'user_id',
         'photo_path',
