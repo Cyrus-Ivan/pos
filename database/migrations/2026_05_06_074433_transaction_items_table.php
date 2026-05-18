@@ -32,6 +32,9 @@ return new class extends Migration {
 
             $table->timestamps();
             $table->primary(['transaction_id', 'item_id', 'type']);
+            if (Schema::getConnection()->getDriverName() === 'sqlite') {
+                $table->timestamp('synced_at')->nullable();
+            }
         });
     }
 
