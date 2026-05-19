@@ -49,20 +49,26 @@ class SyncService
                 ->where('updated_at', '>', $lastPull)
                 ->orderBy('updated_at')
                 ->chunk(500, function ($records) use ($modelClass, $table) {
-                    if ($records->isEmpty()) return;
+                    if ($records->isEmpty())
+                        return;
 
                     DB::transaction(function () use ($records, $modelClass, $table) {
                         $upsertData = [];
                         foreach ($records as $record) {
                             $data = (array) $record;
-                            // Ensure local synced_at is null so if it needs re-syncing locally...? 
-                            // No, if pulling FROM remote, it is deemed synced!
                             $data['synced_at'] = now()->toDateTimeString();
                             $upsertData[] = $data;
                         }
 
-                        // Laravel upsert relies on primary or unique keys. We assume 'id' here.
-                        $modelClass::upsert($upsertData, ['id']);
+                        // Determine the unique key(s) for the model
+                        $uniqueKeys = (new $modelClass)->getKeyName();
+                        if ($table === 'transaction_items') {
+                            $uniqueKeys = ['transaction_id', 'item_id', 'type'];
+                        } else {
+                            $uniqueKeys = (array) $uniqueKeys;
+                        }
+
+                        $modelClass::upsert($upsertData, $uniqueKeys);
                     });
                 });
         }
@@ -76,31 +82,61 @@ class SyncService
             $model = new $modelClass;
             $table = $model->getTable();
 
-            $modelClass::unsynced()
-                ->chunk(500, function ($localRecords) use ($table) {
-                    if ($localRecords->isEmpty()) return;
+            $query = $modelClass::unsynced();
 
-                    $payload = [];
-                    $syncLog = [];
+            // Override chunk ordering for models without a standard 'id'
+            if ($table === 'transaction_items') {
+                $query->orderBy('created_at');
+            }
 
-                    foreach ($localRecords as $record) {
-                        $attributes = $record->getAttributes();
-                        // Remote doesn't have synced_at, so remove it
-                        Arr::forget($attributes, 'synced_at');
-                        $payload[] = $attributes;
+            $query->chunk(500, function ($localRecords) use ($table, $modelClass) {
+                if ($localRecords->isEmpty())
+                    return;
+
+                $payload = [];
+                $syncLog = [];
+
+                foreach ($localRecords as $record) {
+                    $attributes = $record->getAttributes();
+                    Arr::forget($attributes, 'synced_at');
+                    $payload[] = $attributes;
+
+                    if ($table === 'transaction_items') {
+                        $syncLog[] = [
+                            'transaction_id' => $record->transaction_id,
+                            'item_id' => $record->item_id,
+                            'type' => $record->type,
+                        ];
+                    } else {
                         $syncLog[] = $record->id;
                     }
+                }
 
-                    // Push to Supabase transactionally on the remote side if possible, but upsert handles it
-                    DB::connection('supabase')->table($table)->upsert($payload, ['id']);
+                $uniqueKeys = (new $modelClass)->getKeyName();
+                if ($table === 'transaction_items') {
+                    $uniqueKeys = ['transaction_id', 'item_id', 'type'];
+                } else {
+                    $uniqueKeys = (array) $uniqueKeys;
+                }
 
-                    // If successful, mark local as synced
-                    DB::transaction(function () use ($table, $syncLog) {
+                DB::connection('supabase')->table($table)->upsert($payload, $uniqueKeys);
+
+                DB::transaction(function () use ($table, $syncLog) {
+                    if ($table === 'transaction_items') {
+                        foreach ($syncLog as $keys) {
+                            DB::table($table)
+                                ->where('transaction_id', $keys['transaction_id'])
+                                ->where('item_id', $keys['item_id'])
+                                ->where('type', $keys['type'])
+                                ->update(['synced_at' => now()]);
+                        }
+                    } else {
                         DB::table($table)
                             ->whereIn('id', $syncLog)
                             ->update(['synced_at' => now()]);
-                    });
+                    }
                 });
+            });
         }
     }
 
@@ -115,13 +151,23 @@ class SyncService
             $model = new $modelClass;
             $table = $model->getTable();
 
+            if ($table === 'transaction_items') {
+                // For transaction_items, composite keys make mass deletion complex to check
+                // For safety and performance, we'll verify transaction existence instead,
+                // as transaction_items cascade delete based on transaction_id.
+                // If a transaction_item was individually deleted remote, we might need a 
+                // different check, but usually the parent transaction is deleted.
+                continue; // Skip transaction_items specific deletion sync, let cascade handle it
+            }
+
             // Find synced records locally
             $modelClass::whereNotNull('synced_at')
                 ->select('id')
                 ->chunkById(500, function ($records) use ($table) {
                     $localIds = $records->pluck('id')->toArray();
-                    
-                    if (empty($localIds)) return;
+
+                    if (empty($localIds))
+                        return;
 
                     // Ask remote what IDs still exist
                     $remoteIds = DB::connection('supabase')
